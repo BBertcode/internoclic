@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -101,15 +102,19 @@
                 return Math.ceil(x / 25) * 25;
             }
 
-            function chooseTabletStrength(doseMg) {
-                return doseMg % 50 === 0 ? 50 : 25;
-            }
+            function formatComprimésOptimisé(doseMg) {
+                if (!doseMg || doseMg <= 0) return "";
 
-            function formatComprimésUneForce(doseMg) {
-                const strength = chooseTabletStrength(doseMg);
-                const n = doseMg / strength;
-                const unit = n === 1 ? "comprimé" : "comprimés";
-                return `${n} ${unit} de ${strength} mg`;
+                // On privilégie les cp de 50 mg, et on complète par 25 mg si besoin.
+                const n50 = Math.floor(doseMg / 50);
+                const reste = doseMg % 50; // 0 ou 25 (dose multiple de 25)
+                const n25 = reste === 25 ? 1 : 0;
+
+                const parts = [];
+                if (n50 > 0) parts.push(`${n50} ${n50 === 1 ? "comprimé" : "comprimés"} de 50 mg`);
+                if (n25 > 0) parts.push(`${n25} comprimé de 25 mg`);
+
+                return parts.join(" + ");
             }
 
             function computeDoseAzathioprine(poidsKg, tpmtStatus) {
@@ -124,7 +129,8 @@
             }
 
             function updateAzathioprineDose() {
-                const poids = parseFloat(document.getElementById("poids-kg").value);
+                const poidsStr = document.getElementById("poids-kg").value.replace(",", ".");
+                const poids = parseFloat(poidsStr);
                 const tpmtStatus = document.getElementById("tpmt-status").value;
                 const cpSpan = document.getElementById("cp-aza");
 
@@ -134,7 +140,7 @@
                 }
 
                 const dose = computeDoseAzathioprine(poids, tpmtStatus);
-                const comp = formatComprimésUneForce(dose);
+                const comp = formatComprimésOptimisé(dose);
 
                 cpSpan.textContent = `- ${dose} mg le matin soit ${comp}`;
             }
@@ -146,3 +152,4 @@
         </script>
     </body>
 </html>
+```
