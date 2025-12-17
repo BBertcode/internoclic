@@ -7,6 +7,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+    <!-- IMPORTANT pour afficher les \n -->
+    <style>
+        #cp-aza {
+            white-space: pre-line;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,11 +27,10 @@
 <main class="ordo_liste">
     <h1>Azathioprine</h1>
 
-    <!-- ORDANNANCE -->
     <div class="ordo1">
         <h3 class="titre-ordo">Ordonnance Azathioprine</h3>
 
-        <!-- Variables non copiées -->
+        <!-- VARIABLES NON COPIÉES -->
         <div class="ordo2 no-copy" style="margin-bottom:12px; display:flex; gap:24px; align-items:center;">
             <div>
                 <label for="poids-kg"><strong>Poids (kg) :</strong></label>
@@ -41,64 +47,13 @@
             </div>
         </div>
 
-        <!-- Texte copiable -->
+        <!-- TEXTE COPIABLE -->
         <p class="ordo2" id="ordo-aza">
-            <span id="premiere-ligne">AZATHIOPRINE comprimé :</span>
+            <span id="premiere-ligne">AZATHIOPRINE comprimé :</span><br>
             <span id="cp-aza"></span>
         </p>
 
         <button class="copy-btn">Copier</button>
-    </div>
-
-    <!-- BILAN PRE-THERAPEUTIQUE -->
-    <div class="ordo1">
-        <h3 class="titre-ordo">Bilan pré-thérapeutique</h3>
-        <p class="ordo2">
-            Faire réaliser par un laboratoire d'analyses médicales, à jeun, à domicile si besoin :<br><br>
-            - Génotypage TPMT<br>
-            - NFP<br>
-            - Ionogramme sanguin, créatinine<br>
-            - ASAT ALAT GGT PAL Bilirubine totale<br>
-            - CRP<br>
-            - Sérologies VIH, VHB, VHC<br><br>
-
-            <a class="no-copy" target="_blank"
-               href="https://www.eurofins-biomnis.com/referentiel/liendoc/renseignements/B12-Genetique_Moleculaire.pdf">
-                Bon et consentement TPMT – Eurofins Biomnis
-            </a>
-        </p>
-        <button class="copy-btn">Copier</button>
-    </div>
-
-    <!-- SURVEILLANCE -->
-    <div class="ordo1">
-        <h3 class="titre-ordo">Surveillance biologique</h3>
-        <p class="ordo2">
-            Faire réaliser dans un laboratoire, à jeun, à domicile si besoin :<br><br>
-            Une fois toutes les 2 semaines pendant 1 mois, puis une fois par mois pendant 3 mois,
-            puis une fois tous les 3 mois :<br>
-            - ASAT ALAT<br>
-            - NFP<br><br>
-            En plus avant la prochaine consultation :<br>
-            - Ionogramme sanguin, créatinine<br>
-            - CRP<br>
-            - Glycémie à jeun<br>
-            - GGT PAL Bilirubine totale
-        </p>
-        <button class="copy-btn">Copier</button>
-    </div>
-
-    <!-- INFO PATIENT -->
-    <div class="ordo1">
-        <h3 class="titre-ordo">Information patient</h3>
-        <div class="ordo2">
-            <li>
-                <a target="_blank"
-                   href="https://www.getaid.org/wp-content/uploads/2025/07/GETAID_AZATHIOPRINE_V4_20200610_version-t%C3%A9l%C3%A9chargeable_20250626.pdf">
-                    Fiche patient Azathioprine (GETAID)
-                </a>
-            </li>
-        </div>
     </div>
 </main>
 
@@ -114,8 +69,6 @@
     }
 
     function formatComprimésOptimisé(doseMg) {
-        if (!doseMg || doseMg <= 0) return "";
-
         const n50 = Math.floor(doseMg / 50);
         const reste = doseMg % 50;
         const n25 = reste === 25 ? 1 : 0;
@@ -153,8 +106,8 @@
         const comp = formatComprimésOptimisé(dose);
 
         cpSpan.textContent =
-            ` - ${dose} mg le matin soit ${comp}. ` +
-            `Ne pas associer à de l'allopurinol (Zyloric) ou du fébuxostat (Adénuric).`;
+            `- ${dose} mg le matin soit ${comp}.\n` +
+            `- Ne pas associer à de l'allopurinol (Zyloric) ou du fébuxostat (Adénuric).`;
     }
 
     document.getElementById("poids-kg").addEventListener("input", updateAzathioprineDose);
