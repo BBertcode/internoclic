@@ -23,23 +23,24 @@
             <div class="ordo1">
                 <h3 class="titre-ordo">Ordonnance Azathioprine</h3>
 
-                <div class="ordo2" style="margin-bottom: 12px;">
-                    <label for="poids-kg"><strong>Poids (kg) :</strong></label>
-                    <input id="poids-kg" type="number" min="10" max="250" step="0.1" placeholder="ex : 70"
-                        style="margin-left:8px; width:90px;">
+                <div class="ordo2" style="margin-bottom: 12px; display:flex; align-items:center; gap:24px;">
+                    <div>
+                        <label for="poids-kg"><strong>Poids (kg) :</strong></label>
+                        <input id="poids-kg" type="number" min="10" max="250" step="0.1"
+                               placeholder="ex : 70" style="margin-left:8px; width:90px;">
+                    </div>
 
-                    <br><br>
-
-                    <label for="tpmt-status"><strong>Génotypage TPMT :</strong></label>
-                    <select id="tpmt-status" style="margin-left:8px;">
-                        <option value="normal" selected>Normal</option>
-                        <option value="reduced">Inconnu / intermédiaire</option>
-                    </select>
+                    <div>
+                        <label for="tpmt-status"><strong>Génotypage TPMT :</strong></label>
+                        <select id="tpmt-status" style="margin-left:8px;">
+                            <option value="normal" selected>Normal</option>
+                            <option value="reduced">Inconnu ou intermédiaire</option>
+                        </select>
+                    </div>
                 </div>
 
                 <p class="ordo2" id="ordo-aza">
                     <span id="premiere-ligne">AZATHIOPRINE comprimé :</span><br />
-                    <strong><span id="dose-aza">___</span> mg</strong><br />
                     <span id="cp-aza"></span>
                 </p>
 
@@ -96,70 +97,50 @@
         <script src="script.js"></script>
 
         <script>
-            // Règles inchangées (base) : 2 mg/kg/j, arrondi au multiple de 25 mg supérieur, max 200 mg/j
-            // Modif : si TPMT inconnue/intermédiaire -> dose /2, arrondi au 25 mg supérieur, max 100 mg/j
-
             function ceilToNext25(x) {
                 return Math.ceil(x / 25) * 25;
             }
 
             function chooseTabletStrength(doseMg) {
-                // Format demandé : "X comprimés de YY mg" (une seule force)
-                // Choix : si divisible par 50 -> cp 50 mg ; sinon -> cp 25 mg
                 return doseMg % 50 === 0 ? 50 : 25;
             }
 
             function formatComprimésUneForce(doseMg) {
                 const strength = chooseTabletStrength(doseMg);
                 const n = doseMg / strength;
-
-                if (!Number.isFinite(n) || n <= 0 || Math.floor(n) !== n) return "";
-
                 const unit = n === 1 ? "comprimé" : "comprimés";
                 return `${n} ${unit} de ${strength} mg`;
             }
 
             function computeDoseAzathioprine(poidsKg, tpmtStatus) {
-                // Dose standard
-                const doseTheorique = poidsKg * 2;            // 2 mg/kg/j
-                let dose = ceilToNext25(doseTheorique);
+                let dose = ceilToNext25(poidsKg * 2);
                 dose = Math.min(dose, 200);
 
-                // TPMT inconnue/intermédiaire -> 1/2 dose, max 100 mg/j, arrondi au 25 mg supérieur
                 if (tpmtStatus === "reduced") {
                     dose = ceilToNext25(dose / 2);
                     dose = Math.min(dose, 100);
                 }
-
                 return dose;
             }
 
             function updateAzathioprineDose() {
-                const poidsEl = document.getElementById("poids-kg");
-                const tpmtEl = document.getElementById("tpmt-status"); // valeurs attendues: "normal" ou "reduced"
-                const doseSpan = document.getElementById("dose-aza");
+                const poids = parseFloat(document.getElementById("poids-kg").value);
+                const tpmtStatus = document.getElementById("tpmt-status").value;
                 const cpSpan = document.getElementById("cp-aza");
 
-                const poids = parseFloat(poidsEl?.value);
-                const tpmtStatus = tpmtEl?.value || "normal";
-
                 if (!poids || poids <= 0) {
-                    if (doseSpan) doseSpan.textContent = "___";
-                    if (cpSpan) cpSpan.textContent = "";
+                    cpSpan.textContent = "";
                     return;
                 }
 
                 const dose = computeDoseAzathioprine(poids, tpmtStatus);
                 const comp = formatComprimésUneForce(dose);
 
-                if (doseSpan) doseSpan.textContent = dose.toString();
-
-                // Texte demandé : "**mg le matin soit * comprimés de **mg"
-                if (cpSpan) cpSpan.textContent = `- ${dose} mg le matin soit ${comp}`;
+                cpSpan.textContent = `- ${dose} mg le matin soit ${comp}`;
             }
 
-            document.getElementById("poids-kg")?.addEventListener("input", updateAzathioprineDose);
-            document.getElementById("tpmt-status")?.addEventListener("change", updateAzathioprineDose);
+            document.getElementById("poids-kg").addEventListener("input", updateAzathioprineDose);
+            document.getElementById("tpmt-status").addEventListener("change", updateAzathioprineDose);
 
             updateAzathioprineDose();
         </script>
