@@ -144,7 +144,9 @@
                 const dose = computeDoseAzathioprine(poids, tpmtStatus);
                 const comp = formatComprimésOptimisé(dose);
 
-                cpSpan.textContent = `- ${dose} mg le matin soit ${comp}`;
+                cpSpan.textContent =
+                    `- ${dose} mg le matin soit ${comp}\n` +
+                    `- Ne pas associer à de l'allopurinol (Zyloric) ou du fébuxostat (Adénuric).`;
             }
 
             document.getElementById("poids-kg").addEventListener("input", updateAzathioprineDose);
