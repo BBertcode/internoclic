@@ -8,6 +8,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     </head>
+
     <body>
         <header>
             <a href="index.html">
@@ -21,15 +22,24 @@
             
             <div class="ordo1">
                 <h3 class="titre-ordo">Ordonnance Azathioprine</h3>
-                <p class="ordo2">
+
+                <div class="ordo2" style="margin-bottom: 12px;">
+                    <label for="poids-kg"><strong>Poids (kg) :</strong></label>
+                    <input id="poids-kg" type="number" min="10" max="250" step="0.1" placeholder="ex : 70"
+                        style="margin-left:8px; width:90px;">
+                    <br><br>
+                    <small>
+                        Règle : 2 mg/kg/j, arrondi au multiple de 25 mg supérieur, sans dépasser 200 mg/j.
+                        Cp disponibles : 50 mg et 25 mg.
+                    </small>
+                </div>
+
+                <p class="ordo2" id="ordo-aza">
                     <span id="premiere-ligne">AZATHIOPRINE comprimé :</span><br />
-                    - 50 mg/j pendant 2 semaines,<br />
-                    - puis 100 mg/j pendant 2 semaines,<br />
-                    - puis 150 mg/j au long cours (adaptation au poids et à la tolérance).<br />
+                    - <strong><span id="dose-aza">___</span> mg/j</strong> (2 mg/kg/j, arrondi au palier de 25 mg supérieur, max 200 mg/j),<br />
+                    - en 1, 2 ou 3 prises quotidiennes.<br />
                     <br />
-                    En cas d'intolérance ou de cytopénie : diminuer au palier précédent et recontrôler la NFP.<br />
-                    <br />
-                    L’adaptation posologique peut dépendre de l’activité TPMT ± NUDT15 selon les recommandations locales.
+                    <span id="cp-aza"></span>
                 </p>
 
                 <button class="copy-btn">Copier</button>
@@ -86,5 +96,48 @@
         </footer>
     
         <script src="script.js"></script>
+
+        <script>
+            function ceilToNext25(x) {
+                return Math.ceil(x / 25) * 25;
+            }
+
+            function formatComprimés(doseMg) {
+                // doseMg est multiple de 25
+                const n50 = Math.floor(doseMg / 50);
+                const rem = doseMg % 50; // 0 ou 25
+                const n25 = rem === 25 ? 1 : 0;
+
+                const parts = [];
+                if (n50 > 0) parts.push(`${n50} cp de 50 mg`);
+                if (n25 > 0) parts.push(`${n25} cp de 25 mg`);
+
+                return parts.length ? `Soit : ${parts.join(" + ")} par jour.` : "";
+            }
+
+            function updateAzathioprineDose() {
+                const poidsInput = document.getElementById("poids-kg");
+                const doseSpan = document.getElementById("dose-aza");
+                const cpSpan = document.getElementById("cp-aza");
+
+                const poids = parseFloat(poidsInput.value);
+
+                if (!poids || poids <= 0) {
+                    doseSpan.textContent = "___";
+                    cpSpan.textContent = "";
+                    return;
+                }
+
+                const doseTheorique = poids * 2;          // 2 mg/kg/j
+                let doseArrondie = ceilToNext25(doseTheorique);
+                doseArrondie = Math.min(doseArrondie, 200); // plafond 200 mg/j
+
+                doseSpan.textContent = doseArrondie.toString();
+                cpSpan.textContent = formatComprimés(doseArrondie);
+            }
+
+            document.getElementById("poids-kg").addEventListener("input", updateAzathioprineDose);
+            updateAzathioprineDose();
+        </script>
     </body>
 </html>
