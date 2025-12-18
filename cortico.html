@@ -32,33 +32,33 @@
     <div class="ordo1">
         <h3 class="titre-ordo">Générateur d'ordonnance de corticothérapie</h3>
 
-        <!-- Variables non copiées -->
-        <div class="ordo2 no-copy" style="margin-bottom:12px; display:flex; flex-wrap:wrap; gap:18px; align-items:center;">
-            <div>
-                <label for="dose_initiale"><strong>Dose initiale (mg/j) :</strong></label>
-                <input type="number" id="dose_initiale" min="0" step="0.5" style="margin-left:8px; width:90px;">
+        <!-- Variables non copiées (layout vertical) -->
+        <div class="ordo2 no-copy" style="margin-bottom:12px;">
+            <div style="margin-bottom:8px;">
+                <label for="dose_initiale"><strong>Dose initiale (mg/jour) :</strong></label><br>
+                <input type="number" id="dose_initiale" min="0" step="0.5" style="width:120px;">
+            </div>
+
+            <div style="margin-bottom:8px;">
+                <label for="duree_semaines"><strong>Durée de décroissance (semaines) :</strong></label><br>
+                <input type="number" id="duree_semaines" min="1" step="1" style="width:120px;">
+            </div>
+
+            <div style="margin-bottom:8px;">
+                <label for="premier_palier_duree"><strong>Durée du premier palier (semaines) :</strong></label><br>
+                <input type="number" id="premier_palier_duree" min="0" step="1" style="width:120px;">
             </div>
 
             <div>
-                <label for="duree_semaines"><strong>Durée décroissance (semaines) :</strong></label>
-                <input type="number" id="duree_semaines" min="1" step="1" style="margin-left:8px; width:80px;">
-            </div>
-
-            <div>
-                <label for="premier_palier_duree"><strong>1er palier (semaines) :</strong></label>
-                <input type="number" id="premier_palier_duree" min="0" step="1" style="margin-left:8px; width:70px;">
-            </div>
-
-            <div>
-                <label for="date_debut"><strong>Date de début :</strong></label>
-                <input type="date" id="date_debut" style="margin-left:8px;">
+                <label for="date_debut"><strong>Date de début :</strong></label><br>
+                <input type="date" id="date_debut">
             </div>
         </div>
 
         <!-- Texte copiable -->
         <p class="ordo2" id="resultat"></p>
 
-        <!-- Boutons alignés : Générer à gauche, Copier à droite -->
+        <!-- Boutons -->
         <div style="display:flex; gap:12px; align-items:center;">
             <button id="btn-generer" type="button">Générer</button>
             <button class="copy-btn" type="button">Copier</button>
@@ -80,7 +80,7 @@
     <a href="index.html">Page d'accueil</a>
 </footer>
 
-<!-- Copie homogène (boutons .copy-btn) -->
+<!-- Copie homogène -->
 <script src="script.js"></script>
 
 <script>
@@ -95,11 +95,11 @@
             return;
         }
         if (!dureeSemaines || dureeSemaines <= 0) {
-            alert("Renseigner une durée de décroissance (semaines) > 0.");
+            alert("Renseigner une durée de décroissance > 0.");
             return;
         }
         if (premierPalierDuree < 0 || isNaN(premierPalierDuree)) {
-            alert("Renseigner une durée de premier palier valide.");
+            alert("Renseigner une durée du premier palier valide.");
             return;
         }
         if (!dateDebutStr) {
@@ -107,55 +107,45 @@
             return;
         }
         if (premierPalierDuree >= dureeSemaines) {
-            alert("La durée du premier palier doit être inférieure à la durée totale de la décroissance.");
+            alert("La durée du premier palier doit être inférieure à la durée totale.");
             return;
         }
 
-        // Paliers (incluant 17.5 / 12.5)
         let paliers = [80, 70, 60, 50, 40, 30, 25, 20, 17.5, 15, 12.5, 10, 7.5];
         paliers = paliers.filter(d => d <= doseInitiale);
-
-        if (paliers.length === 0) {
-            alert("Aucun palier disponible pour cette dose initiale.");
-            return;
-        }
 
         let dateActuelle = new Date(dateDebutStr);
 
         const semainesRestantes = dureeSemaines - premierPalierDuree;
         const nbPaliersRestants = paliers.length - 1;
 
-        // Si on n'a qu'un palier (dose initiale = plus bas palier), on sort proprement
         let paliersDuree = [];
         if (nbPaliersRestants > 0) {
-            const baseDuree = Math.floor(semainesRestantes / nbPaliersRestants);
-            const resteSemaines = semainesRestantes % nbPaliersRestants;
-
-            paliersDuree = Array(resteSemaines).fill(baseDuree + 1)
-                .concat(Array(nbPaliersRestants - resteSemaines).fill(baseDuree))
+            const base = Math.floor(semainesRestantes / nbPaliersRestants);
+            const reste = semainesRestantes % nbPaliersRestants;
+            paliersDuree = Array(reste).fill(base + 1)
+                .concat(Array(nbPaliersRestants - reste).fill(base))
                 .sort((a, b) => a - b);
         }
 
         const ordonnance = [];
         ordonnance.push("PREDNISONE cp de 20 et 5 mg :");
 
-        // 1er palier
         let dateFin = new Date(dateActuelle);
         dateFin.setDate(dateActuelle.getDate() + (premierPalierDuree * 7) - 1);
         ordonnance.push(`- ${paliers[0]} mg le matin pendant ${premierPalierDuree} semaine${premierPalierDuree > 1 ? "s" : ""} (du ${dateActuelle.toLocaleDateString("fr-FR")} au ${dateFin.toLocaleDateString("fr-FR")}),`);
 
-        // paliers suivants
         dateActuelle = new Date(dateFin);
         dateActuelle.setDate(dateFin.getDate() + 1);
 
         for (let i = 1; i < paliers.length; i++) {
-            const duree = paliersDuree[i - 1] ?? 0;
-            if (duree > 0) {
-                const dateDebutPalier = new Date(dateActuelle);
-                dateFin = new Date(dateDebutPalier);
-                dateFin.setDate(dateDebutPalier.getDate() + (duree * 7) - 1);
+            const d = paliersDuree[i - 1] ?? 0;
+            if (d > 0) {
+                const debut = new Date(dateActuelle);
+                dateFin = new Date(debut);
+                dateFin.setDate(debut.getDate() + (d * 7) - 1);
 
-                ordonnance.push(`- puis ${paliers[i]} mg le matin pendant ${duree} semaine${duree > 1 ? "s" : ""} (du ${dateDebutPalier.toLocaleDateString("fr-FR")} au ${dateFin.toLocaleDateString("fr-FR")}),`);
+                ordonnance.push(`- puis ${paliers[i]} mg le matin pendant ${d} semaine${d > 1 ? "s" : ""} (du ${debut.toLocaleDateString("fr-FR")} au ${dateFin.toLocaleDateString("fr-FR")}),`);
 
                 dateActuelle = new Date(dateFin);
                 dateActuelle.setDate(dateFin.getDate() + 1);
@@ -177,7 +167,6 @@
         document.getElementById("premier_palier_duree").value = 3;
         document.getElementById("date_debut").value = today;
 
-        // Ne génère rien au chargement : uniquement au clic
         document.getElementById("btn-generer").addEventListener("click", genererOrdonnance);
     });
 </script>
