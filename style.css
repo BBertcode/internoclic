@@ -1,212 +1,286 @@
-/* Body */
+/* Internoclic — style inspired by legaltemplates.net (customized) */
 
-/*image du background*/
-body {
-    background-image: url(Images/background_3.png);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+/* ---------- Base ---------- */
+:root{
+  --bg: #f5f7fb;
+  --text: #111827;
+  --muted: #6b7280;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --shadow: 0 12px 30px rgba(17,24,39,0.08);
+  --shadow-sm: 0 10px 22px rgba(17,24,39,0.10);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --accent: #2563eb;
 }
 
-/* Ajout d'un overlay sombre pour améliorer la lisibilité */
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3); /* Fond sombre transparent */
-    z-index: -1;
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html{ overflow-y: scroll; }
+
+body{
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.55;
 }
 
-/* Description du Header */
-header {
-    background:rgba(20, 20, 20, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content:center;
-    font-family: "Press Start 2P", system-ui;
-    margin: auto;
-    border-radius: 5px;
-    padding: 15px;
-    text-align: center;
-    backdrop-filter: blur(5px);
-    border-bottom: 2px solid #007bff; /* Fine bordure bleue */
+a{ color: inherit; text-decoration: none; }
+
+img{ max-width: 100%; display: block; }
+
+.container{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 18px;
 }
 
-header a {
-    text-decoration: none;
+/* ---------- Header ---------- */
+.site-header{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
 }
 
-header:hover {
-    opacity: 0.8;
+.header-inner{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 18px;
 }
 
-header img {
-    height: 50px; /* Ajuste la taille du logo selon tes besoins */
-    margin-right: 10px; /* Espacement entre le logo et le titre */
+.brand{
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 180px;
 }
 
-
-
-/* Description du menu de navigation */
-
-nav a,
-nav li {
-    padding: 2%;
-    text-decoration: none;
+.brand-logo{
+  width: 34px;
+  height: 34px;
 }
 
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    gap: 0.5em;
+.brand-name{
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 18px;
 }
 
-nav ul li {
-    position: relative;
-    display: inline-block;
-    text-align: center;
+/* ---------- Top nav ---------- */
+.top-nav{ display: block; }
+
+.nav-list{
+  list-style: none;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  gap: 18px;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
 }
 
-nav ul li a {
-    text-decoration: 0;
+.nav-link,
+.nav-trigger{
+  font: inherit;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 650;
 }
 
-.dropdown {
-    position: relative;
+.nav-link:hover,
+.nav-trigger:hover{
+  background: #f9fafb;
+  border-color: var(--border);
 }
 
-.dropdown_menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    min-width: 150px;
-    list-style: none;
+.nav-item{ position: relative; }
+
+.nav-item.has-dropdown .caret{
+  font-size: 12px;
+  color: var(--muted);
 }
 
-.dropdown:hover .dropdown_menu {
-    display: grid;
-    grid-template-columns: 1fr;
+/* Dropdown (white, non transparent, overlay) */
+.nav-dropdown{
+  display: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(100% + 10px);
+  min-width: 260px;
+  background: #ffffff;          /* fond blanc non transparent */
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  padding: 8px;
 }
 
-
-/*Main*/
-
-nav a, footer a, h2, li  {
-    color: white;
-    text-shadow: 1px 1px 1px black;
-    font-family: "Inter", sans-serif;
-  }
-  
-h1 {
-    color: white;
-    font-size: 2em;
-    font-family: "Press Start 2P", system-ui;
-    text-shadow: 1px 1px 1px black;
+.nav-item.open > .nav-dropdown{
+  display: block;
 }
 
-.bienvenue {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 400px;
-    align-items: center;
+.nav-dd-item{
+  display: block;
+  padding: 10px 10px;
+  border-radius: 10px;
+  font-weight: 550;
 }
 
-.ordo1 {
-    background-color: white;
-    padding: 0.7em;
-    border: 1px black solid;
-    border-radius: 6px;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
-    color: black;
-    font-family: "Inter", sans-serif;
-    width: 75%;
-    margin: 0.5em;
+.nav-dd-item:hover{
+  background: #f3f4f6;
 }
 
-.ordo2 li a {
-    color: black;
-    font-family: "Inter", sans-serif;
-    text-decoration: none;
-    text-shadow: none;
+/* ---------- Page layout ---------- */
+main{
+  max-width: 1100px;
+  margin: 28px auto 44px;
+  padding: 0 18px;
 }
 
-.titre-ordo {
-    font-size: 1.2em;  /* Taille légèrement plus grande que le texte de l'ordo */
-    font-weight: bold;
-    color: #444;  /* Gris foncé pour éviter le contraste trop fort */
-    border-left: 4px solid #007bff;  /* Petite barre verticale bleue pour un effet pro */
-    padding-left: 10px;  /* Espacement entre la barre et le texte */
-    margin-bottom: 8px;  /* Un peu d’espace avant le reste de l’ordo */
-    font-family: Arial, sans-serif;
+.page-card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px;
 }
 
+/* Headings */
+h1{
+  font-size: 28px;
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+h2{
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+p{ color: var(--muted); margin-bottom: 14px; }
 
-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* ---------- Tiles for ordonnances ---------- */
+.ordo1{
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 8px 18px rgba(17,24,39,0.06);
+  padding: 16px;
+  line-height: 1.35;
+  margin: 16px 0;
 }
 
-.ordo_liste {
-    display: flex;
-    flex-direction: column;
+.ordo1:first-child{ margin-top: 0; }
+.ordo1:last-child{ margin-bottom: 0; }
+
+.ordo1 h2, .ordo1 h3{
+  margin: 0 0 10px 0;
+  color: var(--text);
 }
 
-.ordo_liste h1 {
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    padding: 10px;
-    display: inline-block;
-    border-radius: 8px;
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
-    font-family: "Inter", sans-serif;
-    margin: 0.2em;  
-    width: 75%;
-    text-align: center;
-    padding: 0.5em;
-
+.ordo1 .ordo-actions{
+  display: flex;
+  gap: 18px;
+  flex-wrap: nowrap;
+  margin-bottom: 10px;
 }
 
-/* Amélioration des boutons */
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
+.copy-btn, .generate-btn{
+  font: inherit;
+  font-weight: 650;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  cursor: pointer;
 }
 
-button:hover {
-    background-color: #0056b3; /* Bleu foncé au survol */
+.copy-btn:hover, .generate-btn:hover{
+  background: #f9fafb;
 }
 
-
-/* Description du footer */
-footer a {
-    text-decoration: none;
-    padding: 1%;
-    border-radius: 5px;
+.ordo2{
+  white-space: normal;
+  text-align: left;
+  background: #f9fafb;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 0;
+  line-height: 1.25;
+  color: #111827;
 }
 
-footer a:hover {
-    border: 1px white solid;
+/* ---------- Fix bullets in "Information patient" ---------- */
+/* Recommandé : entourer les <li> par <ul class="info-list"> */
+.ordo2 .info-list{
+  margin: 0;
+  padding-left: 18px;          /* indentation maîtrisée */
+  list-style-position: inside;  /* puces DANS le conteneur */
 }
 
-footer {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-start;
+.ordo2 .info-list li{
+  margin: 6px 0;
 }
+
+/* Filet de sécurité si des <li> restent sans <ul> (HTML invalide mais fréquent) */
+.ordo2 > li{
+  list-style-position: inside;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+/* Inputs in cortico page etc */
+label{ font-weight: 650; color: var(--text); }
+input, select, textarea{
+  font: inherit;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 10px;
+  background: #ffffff;
+}
+input:focus, select:focus, textarea:focus, button:focus{
+  outline: 2px solid rgba(37,99,235,0.25);
+  outline-offset: 2px;
+}
+
+/* ---------- Footer ---------- */
+footer{
+  max-width: 1100px;
+  margin: 0 auto 24px;
+  padding: 0 18px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 780px){
+  .header-inner{ align-items: flex-start; }
+  .brand{ min-width: auto; }
+  .nav-list{ gap: 18px; }
+  .nav-link, .nav-trigger{ padding: 8px 8px; font-weight: 600; }
+  .nav-dropdown{ left: 0; right: auto; min-width: 240px; }
+}
+
+/* ---------- Subpages: transparent page wrapper (keep tiles visible) ---------- */
+body.subpage .page-card{
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* tighter typography inside tiles */
+.ordo1 p{ margin-bottom: 8px; }
+.ordo1 h3{ margin-bottom: 10px; }
+.ordo1 pre{ line-height: 1.25; margin: 10px 0; }
+.ordo1 .btn-row{ margin-top: 10px; }
