@@ -112,10 +112,9 @@ img{ max-width: 100%; display: block; }
 
 /* Dropdown (white, non transparent, overlay) */
 .nav-dropdown{
-  display: none;
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(6px); /* slide discret */
   top: calc(100% + 10px); /* on garde l'espace */
   min-width: 260px;
   background: #ffffff;
@@ -124,6 +123,11 @@ img{ max-width: 100%; display: block; }
   box-shadow: var(--shadow-sm);
   padding: 8px;
   z-index: 1000;
+
+  /* Animation fade/slide (on n'utilise plus display:none) */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease-out, transform 120ms ease-out;
 }
 
 /* PONT INVISIBLE : empêche la fermeture quand on descend la souris */
@@ -140,20 +144,26 @@ img{ max-width: 100%; display: block; }
 
 /* Ouverture via clic (classe ajoutée par JS sur mobile) */
 .nav-item.open > .nav-dropdown{
-  display: block;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
 }
 
 /* Ouverture via hover UNIQUEMENT sur desktop (appareils avec hover) */
 @media (hover: hover){
   .nav-item.has-dropdown:hover > .nav-dropdown{
-    display: block;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
   }
 }
 
 /* Sécurité : sur tactile, le hover ne doit pas ouvrir */
 @media (hover: none){
   .nav-item.has-dropdown:hover > .nav-dropdown{
-    display: none;
+    opacity: 0;
+    transform: translateX(-50%) translateY(6px);
+    pointer-events: none;
   }
 }
 
@@ -212,7 +222,6 @@ main{
     text-align: left;
   }
 }
-
 
 /* Responsive home */
 @media (max-width: 780px){
