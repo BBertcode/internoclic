@@ -53,16 +53,16 @@
                 <label for="date_debut"><strong>Date de début :</strong></label>
                 <input type="date" id="date_debut" style="margin-left:8px;">
             </div>
-
-            <div style="display:flex; gap:10px; align-items:center;">
-                <button id="btn-generer" type="button">Générer</button>
-            </div>
         </div>
 
         <!-- Texte copiable -->
         <p class="ordo2" id="resultat"></p>
 
-        <button class="copy-btn">Copier</button>
+        <!-- Boutons alignés : Générer à gauche, Copier à droite -->
+        <div style="display:flex; gap:12px; align-items:center;">
+            <button id="btn-generer" type="button">Générer</button>
+            <button class="copy-btn" type="button">Copier</button>
+        </div>
     </div>
 
     <!-- INFO PATIENT -->
@@ -170,7 +170,6 @@
         document.getElementById("resultat").innerText = ordonnance.join("\n");
     }
 
-    // Defaults
     window.addEventListener("DOMContentLoaded", () => {
         const today = new Date().toISOString().split("T")[0];
         document.getElementById("dose_initiale").value = 60;
@@ -178,10 +177,8 @@
         document.getElementById("premier_palier_duree").value = 3;
         document.getElementById("date_debut").value = today;
 
+        // Ne génère rien au chargement : uniquement au clic
         document.getElementById("btn-generer").addEventListener("click", genererOrdonnance);
-
-        // Générer une première fois pour que le bouton "Copier" serve immédiatement
-        genererOrdonnance();
     });
 </script>
 </body>
