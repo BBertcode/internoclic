@@ -118,7 +118,7 @@ img{ max-width: 100%; display: block; }
   transform: translateX(-50%);
   top: calc(100% + 10px);
   min-width: 260px;
-  background: #ffffff;          /* fond blanc non transparent */
+  background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: var(--shadow-sm);
@@ -155,7 +155,42 @@ main{
   padding: 22px;
 }
 
-/* Headings */
+/* ---------- HOME (page d’accueil – hero style LegalTemplates) ---------- */
+.home-hero{
+  text-align: center;
+  padding: 88px 24px;
+}
+
+.home-title{
+  font-size: 50px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 26px;
+  color: var(--text);
+}
+
+
+.home-subtitle{
+  max-width: 760px;
+  margin: 0 auto;
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--muted);
+  text-align: justify;
+}
+
+/* Responsive home */
+@media (max-width: 780px){
+  .home-title{
+    font-size: 36px;
+  }
+  .home-hero{
+    padding: 56px 18px;
+  }
+}
+
+/* ---------- Headings ---------- */
 h1{
   font-size: 28px;
   letter-spacing: -0.03em;
@@ -221,26 +256,24 @@ p{ color: var(--muted); margin-bottom: 14px; }
 }
 
 /* ---------- Fix bullets in "Information patient" ---------- */
-/* Recommandé : entourer les <li> par <ul class="info-list"> */
 .ordo2 .info-list{
   margin: 0;
-  padding-left: 18px;          /* indentation maîtrisée */
-  list-style-position: inside;  /* puces DANS le conteneur */
+  padding-left: 18px;
+  list-style-position: inside;
 }
 
 .ordo2 .info-list li{
   margin: 6px 0;
 }
 
-/* Filet de sécurité si des <li> restent sans <ul> (HTML invalide mais fréquent) */
 .ordo2 > li{
   list-style-position: inside;
   margin-left: 0;
   padding-left: 0;
 }
 
-/* Inputs in cortico page etc */
-label{ font-weight: 400; color: var(--text); }
+/* ---------- Inputs ---------- */
+label{ font-weight: 400; color: #374151; }
 input, select, textarea{
   font: inherit;
   border: 1px solid var(--border);
@@ -271,7 +304,7 @@ footer{
   .nav-dropdown{ left: 0; right: auto; min-width: 240px; }
 }
 
-/* ---------- Subpages: transparent page wrapper (keep tiles visible) ---------- */
+/* ---------- Subpages ---------- */
 body.subpage .page-card{
   background: transparent;
   border: none;
