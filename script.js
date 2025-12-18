@@ -3,9 +3,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function normalizeCopiedText(text) {
         return text
-            .replace(/\r\n/g, "\n")          // harmonise Windows/Linux
+            .replace(/\r\n/g, "\n")
             .split("\n")
-            .map(line => line.trimStart())   // enlève l'indentation en début de ligne
+            .map(line => line.trimStart())
             .join("\n")
             .trim();
     }
@@ -37,10 +37,14 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// Header dropdown (Menu)
+// ===============================
+// Header dropdowns — MOBILE ONLY
+// ===============================
 
-/* ---------- Top nav dropdowns (click) ---------- */
 (function () {
+  // On n’active le clic QUE sur les appareils sans hover (tactile)
+  if (!window.matchMedia("(hover: none)").matches) return;
+
   const triggers = document.querySelectorAll('.nav-trigger');
 
   function closeAll(exceptItem) {
