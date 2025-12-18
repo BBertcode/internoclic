@@ -35,3 +35,44 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+
+// Header dropdown (Menu)
+
+/* ---------- Top nav dropdowns (click) ---------- */
+(function () {
+  const triggers = document.querySelectorAll('.nav-trigger');
+
+  function closeAll(exceptItem) {
+    document.querySelectorAll('.nav-item.has-dropdown.open').forEach((item) => {
+      if (exceptItem && item === exceptItem) return;
+      item.classList.remove('open');
+      const btn = item.querySelector('.nav-trigger');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  triggers.forEach((btn) => {
+    const item = btn.closest('.nav-item.has-dropdown');
+    if (!item) return;
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const willOpen = !item.classList.contains('open');
+      closeAll(item);
+
+      item.classList.toggle('open', willOpen);
+      btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-item.has-dropdown')) closeAll();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
+  });
+})();

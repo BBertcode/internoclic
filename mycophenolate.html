@@ -1,159 +1,89 @@
 <!-- test deploy dev -->
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InternoClic</title>
-    <link href="style.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-
-    <!-- IMPORTANT : afficher les retours à la ligne (\n) dans #cp-mmf -->
-    <style>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<title>InternoClic</title>
+<link href="style.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;family=Pixelify+Sans:wght@400..700&amp;family=Press+Start+2P&amp;family=VT323&amp;display=swap" rel="stylesheet"/>
+<!-- IMPORTANT : afficher les retours à la ligne (\n) dans #cp-mmf -->
+<style>
         #cp-mmf { white-space: pre-line; }
     </style>
 </head>
-
-<body>
-<header>
-    <a href="index.html">
-        <img src="Images/logo3.png" alt="logo InternoClic"/>
-    </a>
-    <a href="index.html"><h1>InternoClic</h1></a>
-</header>
-
-<nav>
-            <ul>
-                <li><a href="cortico.html">Corticoïdes</a></li>
-
-                <li class="dropdown">Immunosuppresseurs
-                    <ul class="dropdown_menu">
-                        <li><a href="mtx.html">Méthotrexate</a></li>
-                        <li><a href="azathioprine.html">Azathioprine</a></li>
-                        <li><a href="mycophenolate.html">Mycophénolate mofétyl</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">Biothérapies
-                    <ul class="dropdown_menu">
-                        <li><a href="antitnf.html">Anti-TNF alpha</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">Mesures associées
-                    <ul class="dropdown_menu">
-                        <li><a href="osteoporose.html">Ostéoporose</a></li>
-                        <li><a href="vaccins.html">Vaccination</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">Bilan diagnostique
-                    <ul class="dropdown_menu">
-                        <li><a href="uveite.html">Uvéites</a></li>
-                        <li><em>En cours de construction</em></li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-
-
-<main class="ordo_liste">
-    <h1>Mycophénolate mofétil</h1>
-
-    <!-- ORDONNANCE -->
-    <div class="ordo1">
-        <h3 class="titre-ordo">Ordonnance Mycophénolate mofétil</h3>
-
-        <!-- Texte copiable (1 ligne) -->
-        <p class="ordo2" id="ordo-mmf">
-            <span id="cp-mmf">Mycophénolate mofétil 500mg : 2 comprimés matin et soir.</span>
-            <br><br>
-            <a class="no-copy" target="_blank"
-           href="https://ansm.sante.fr/uploads/2021/01/07/mycophenolate-accord-de-soins-2018-07-16.pdf">
+<body class="subpage"><header class="site-header"><div class="header-inner"><a aria-label="Retour à l'accueil" class="brand" href="index.html"><img alt="Internoclic" class="brand-logo" src="Images/logo_65px.png"/><span class="brand-name">Internoclic</span></a><nav aria-label="Navigation principale" class="top-nav"><ul class="nav-list"><li class="nav-item"><a class="nav-link" href="cortico.html">Corticothérapie</a></li><li class="nav-item has-dropdown"><button aria-expanded="false" class="nav-trigger" type="button">Immunosuppresseurs <span aria-hidden="true" class="caret">▾</span></button><div class="nav-dropdown"><a class="nav-dd-item" href="azathioprine.html">Azathioprine</a><a class="nav-dd-item" href="mtx.html">Méthotrexate</a><a class="nav-dd-item" href="mycophenolate.html">Mycophénolate mofétyl</a></div></li><li class="nav-item has-dropdown"><button aria-expanded="false" class="nav-trigger" type="button">Biothérapies <span aria-hidden="true" class="caret">▾</span></button><div class="nav-dropdown"><a class="nav-dd-item" href="antitnf.html">Anti-TNF alpha</a></div></li><li class="nav-item has-dropdown"><button aria-expanded="false" class="nav-trigger" type="button">Mesures associées <span aria-hidden="true" class="caret">▾</span></button><div class="nav-dropdown"><a class="nav-dd-item" href="osteoporose.html">Ostéoporose</a><a class="nav-dd-item" href="vaccins.html">Vaccination</a></div></li><li class="nav-item has-dropdown"><button aria-expanded="false" class="nav-trigger" type="button">Bilan diagnostique <span aria-hidden="true" class="caret">▾</span></button><div class="nav-dropdown"><a class="nav-dd-item" href="uveite.html">Uvéites</a></div></li></ul></nav></div></header>
+<main class="ordo_liste"><div class="page-card">
+<h1>Mycophénolate mofétil</h1>
+<!-- ORDONNANCE -->
+<div class="ordo1">
+<h3 class="titre-ordo">Ordonnance Mycophénolate mofétil</h3>
+<!-- Texte copiable (1 ligne) -->
+<p class="ordo2" id="ordo-mmf">
+<span id="cp-mmf">Mycophénolate mofétil 500mg : 2 comprimés matin et soir.</span>
+<br/><br/>
+<a class="no-copy" href="https://ansm.sante.fr/uploads/2021/01/07/mycophenolate-accord-de-soins-2018-07-16.pdf" target="_blank">
             Accord de soins patientes susceptibles de procréer (ANSM)
         </a>
-        </p>
-
-        
-
-        <button class="copy-btn">Copier</button>
-    </div>
-
-    <!-- BILAN PRE-THERAPEUTIQUE -->
-    <div class="ordo1">
-        <h3 class="titre-ordo">Bilan pré-thérapeutique</h3>
-        <p class="ordo2">
-            Faire réaliser par un laboratoire d'analyses médicales, à jeun, à domicile si besoin :<br><br>
-            - Beta-HCG<br>
-            - NFP<br>
-            - Ionogramme sanguin, créatinine<br>
-            - ASAT ALAT GGT PAL Bilirubine totale<br>
-            - CRP<br>
+</p>
+<button class="copy-btn">Copier</button>
+</div>
+<!-- BILAN PRE-THERAPEUTIQUE -->
+<div class="ordo1">
+<h3 class="titre-ordo">Bilan pré-thérapeutique</h3>
+<p class="ordo2">
+            Faire réaliser par un laboratoire d'analyses médicales, à jeun, à domicile si besoin :<br/>- Beta-HCG<br/>
+            - NFP<br/>
+            - Ionogramme sanguin, créatinine<br/>
+            - ASAT ALAT GGT PAL Bilirubine totale<br/>
+            - CRP<br/>
             - Sérologies VIH, VHB, VHC
         </p>
-        <button class="copy-btn">Copier</button>
-    </div>
-
-    <!-- SURVEILLANCE -->
-    <div class="ordo1">
-        <h3 class="titre-ordo">Surveillance biologique</h3>
-        <p class="ordo2">
-            Faire réaliser dans un laboratoire, à jeun, à domicile si besoin :<br><br>
-            Une fois toutes les 2 semaines pendant 1 mois, puis une fois par mois pendant 3 mois, puis une fois tous les 3 mois :<br>
-            - ASAT ALAT<br>
-            - NFP<br>
-            - Ionogramme sanguin, créatinine<br><br>
-
-            En plus avant la prochaine consultation :<br>
-            - CRP<br>
-            - Glycémie à jeun<br>
+<button class="copy-btn">Copier</button>
+</div>
+<!-- SURVEILLANCE -->
+<div class="ordo1">
+<h3 class="titre-ordo">Surveillance biologique</h3>
+<p class="ordo2">
+            Faire réaliser dans un laboratoire, à jeun, à domicile si besoin :<br/>Une fois toutes les 2 semaines pendant 1 mois, puis une fois par mois pendant 3 mois, puis une fois tous les 3 mois :<br/>
+            - ASAT ALAT<br/>
+            - NFP<br/>
+            - Ionogramme sanguin, créatinine<br/>En plus avant la prochaine consultation :<br/>
+            - CRP<br/>
+            - Glycémie à jeun<br/>
             - GGT PAL Bilirubine totale
         </p>
-        <button class="copy-btn">Copier</button>
-    </div>
-
-    <!-- AIRE SOUS LA COURBE -->
-    <div class="ordo1">
-        <h3 class="titre-ordo">Aire sous la courbe (AUC)</h3>
-        <p class="ordo2">
-            Faire réaliser par un laboratoire d'analyses médicales, à jeun, à domicile si besoin :<br><br>
-            AUC Mycophénolate mofétil : T20min, T1h, T3h.<br><br>
-            Ne pas prendre le médicament avant de se rentre au laboratoire.
-            <br><br>
-
-            <span class="no-copy"><em>
+<button class="copy-btn">Copier</button>
+</div>
+<!-- AIRE SOUS LA COURBE -->
+<div class="ordo1">
+<h3 class="titre-ordo">Aire sous la courbe (AUC)</h3>
+<p class="ordo2">
+            Faire réaliser par un laboratoire d'analyses médicales, à jeun, à domicile si besoin :<br/>AUC Mycophénolate mofétil : T20min, T1h, T3h.<br/>Ne pas prendre le médicament avant de se rentre au laboratoire.
+            <br/><span class="no-copy"><em>
                 Non systématique, potentiellement utile pour adapter les doses et/ou évaluer l’observance en cas d’inefficacité, ou en cas d’effet indésirable.
                 A réaliser à l’équilibre après un changement de posologie (atteint en 3-5 jours)
-            </em></span><br><br>
-
-            <a class="no-copy" target="_blank"
-               href="https://www.eurofins-biomnis.com/referentiel/liendoc/renseignements/R31-FRC_Mycophenolate.pdf">
+            </em></span><br/><a class="no-copy" href="https://www.eurofins-biomnis.com/referentiel/liendoc/renseignements/R31-FRC_Mycophenolate.pdf" target="_blank">
                 Fiche de renseignements (Biomnis)
             </a>
-        </p>
-        <button class="copy-btn">Copier</button>
-    </div>
-
-    <!-- INFO PATIENT -->
-    <div class="ordo1">
-        <h3 class="titre-ordo">Information patient</h3>
-        <div class="ordo2">
-            <li>
-                <a target="_blank"
-                   href="https://ansm.sante.fr/uploads/2021/01/07/mycophenolate-guide-patients-2018-07-16.pdf">
+</p>
+<button class="copy-btn">Copier</button>
+</div>
+<!-- INFO PATIENT -->
+<div class="ordo1">
+<h3 class="titre-ordo">Information patient</h3>
+<div class="ordo2">
+<li>
+<a href="https://ansm.sante.fr/uploads/2021/01/07/mycophenolate-guide-patients-2018-07-16.pdf" target="_blank">
                     Information risque conceptionnel (ANSM)
                 </a>
-            </li>
-        </div>
-    </div>
-</main>
-
-<footer>
-    <a href="index.html">Page d'accueil</a>
-</footer>
-
+</li>
+</div>
+</div>
+</div></main>
 <script src="script.js"></script>
 </body>
 </html>
