@@ -273,7 +273,7 @@ p{ color: var(--muted); margin-bottom: 14px; }
 }
 
 /* ---------- Inputs ---------- */
-label{ font-weight: 650; color: var(--text); }
+label{ font-weight: 400; color: var(--text); }
 input, select, textarea{
   font: inherit;
   border: 1px solid var(--border);
