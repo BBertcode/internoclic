@@ -116,17 +116,45 @@ img{ max-width: 100%; display: block; }
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: calc(100% + 10px);
+  top: calc(100% + 10px); /* on garde l'espace */
   min-width: 260px;
   background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: var(--shadow-sm);
   padding: 8px;
+  z-index: 1000;
 }
 
+/* PONT INVISIBLE : empêche la fermeture quand on descend la souris */
+@media (hover: hover){
+  .nav-dropdown::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -10px;     /* même valeur que le gap */
+    height: 10px;   /* même valeur que le gap */
+  }
+}
+
+/* Ouverture via clic (classe ajoutée par JS sur mobile) */
 .nav-item.open > .nav-dropdown{
   display: block;
+}
+
+/* Ouverture via hover UNIQUEMENT sur desktop (appareils avec hover) */
+@media (hover: hover){
+  .nav-item.has-dropdown:hover > .nav-dropdown{
+    display: block;
+  }
+}
+
+/* Sécurité : sur tactile, le hover ne doit pas ouvrir */
+@media (hover: none){
+  .nav-item.has-dropdown:hover > .nav-dropdown{
+    display: none;
+  }
 }
 
 .nav-dd-item{
@@ -170,7 +198,6 @@ main{
   color: var(--text);
 }
 
-
 .home-subtitle{
   max-width: 760px;
   margin: 0 auto;
@@ -178,6 +205,11 @@ main{
   line-height: 1.7;
   color: var(--muted);
   text-align: justify;
+
+  /* amélioration du justifié en français */
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
 }
 
 /* Responsive home */
@@ -187,6 +219,11 @@ main{
   }
   .home-hero{
     padding: 56px 18px;
+  }
+  /* Sur mobile : meilleure lisibilité que le justifié */
+  .home-subtitle{
+    text-align: left;
+    hyphens: none;
   }
 }
 
