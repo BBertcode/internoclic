@@ -116,23 +116,34 @@ img{ max-width: 100%; display: block; }
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 100%;              /* ← correction clé */
-  margin-top: 10px;       /* ← espace visuel sans zone morte */
-
+  top: calc(100% + 10px); /* on garde l'espace */
   min-width: 260px;
   background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: var(--shadow-sm);
   padding: 8px;
+  z-index: 1000;
 }
 
-/* Ouverture via clic (mobile) */
+/* PONT INVISIBLE : empêche la fermeture quand on descend la souris */
+@media (hover: hover){
+  .nav-dropdown::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -10px;     /* même valeur que le gap */
+    height: 10px;   /* même valeur que le gap */
+  }
+}
+
+/* Ouverture via clic (classe ajoutée par JS sur mobile) */
 .nav-item.open > .nav-dropdown{
   display: block;
 }
 
-/* Ouverture via hover UNIQUEMENT sur desktop */
+/* Ouverture via hover UNIQUEMENT sur desktop (appareils avec hover) */
 @media (hover: hover){
   .nav-item.has-dropdown:hover > .nav-dropdown{
     display: block;
@@ -172,7 +183,7 @@ main{
   padding: 22px;
 }
 
-/* ---------- HOME ---------- */
+/* ---------- HOME (page d’accueil – hero style LegalTemplates) ---------- */
 .home-hero{
   text-align: center;
   padding: 88px 24px;
@@ -194,18 +205,152 @@ main{
   line-height: 1.7;
   color: var(--muted);
   text-align: justify;
+
+  /* amélioration du justifié en français */
   hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
 }
 
 /* Responsive home */
 @media (max-width: 780px){
-  .home-title{ font-size: 36px; }
-  .home-hero{ padding: 56px 18px; }
+  .home-title{
+    font-size: 36px;
+  }
+  .home-hero{
+    padding: 56px 18px;
+  }
+  /* Sur mobile : meilleure lisibilité que le justifié */
   .home-subtitle{
     text-align: left;
     hyphens: none;
   }
 }
 
-/* ---------- Le reste inchangé ---------- */
-/* (ordo, inputs, footer, subpages…) */
+/* ---------- Headings ---------- */
+h1{
+  font-size: 28px;
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+h2{
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+p{ color: var(--muted); margin-bottom: 14px; }
+
+/* ---------- Tiles for ordonnances ---------- */
+.ordo1{
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 8px 18px rgba(17,24,39,0.06);
+  padding: 16px;
+  line-height: 1.35;
+  margin: 16px 0;
+}
+
+.ordo1:first-child{ margin-top: 0; }
+.ordo1:last-child{ margin-bottom: 0; }
+
+.ordo1 h2, .ordo1 h3{
+  margin: 0 0 10px 0;
+  color: var(--text);
+}
+
+.ordo1 .ordo-actions{
+  display: flex;
+  gap: 18px;
+  flex-wrap: nowrap;
+  margin-bottom: 10px;
+}
+
+.copy-btn, .generate-btn{
+  font: inherit;
+  font-weight: 650;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.copy-btn:hover, .generate-btn:hover{
+  background: #f9fafb;
+}
+
+.ordo2{
+  white-space: normal;
+  text-align: left;
+  background: #f9fafb;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 0;
+  line-height: 1.25;
+  color: #111827;
+}
+
+/* ---------- Fix bullets in "Information patient" ---------- */
+.ordo2 .info-list{
+  margin: 0;
+  padding-left: 18px;
+  list-style-position: inside;
+}
+
+.ordo2 .info-list li{
+  margin: 6px 0;
+}
+
+.ordo2 > li{
+  list-style-position: inside;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+/* ---------- Inputs ---------- */
+label{ font-weight: 400; color: #374151; }
+input, select, textarea{
+  font: inherit;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 10px;
+  background: #ffffff;
+}
+input:focus, select:focus, textarea:focus, button:focus{
+  outline: 2px solid rgba(37,99,235,0.25);
+  outline-offset: 2px;
+}
+
+/* ---------- Footer ---------- */
+footer{
+  max-width: 1100px;
+  margin: 0 auto 24px;
+  padding: 0 18px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 780px){
+  .header-inner{ align-items: flex-start; }
+  .brand{ min-width: auto; }
+  .nav-list{ gap: 18px; }
+  .nav-link, .nav-trigger{ padding: 8px 8px; font-weight: 600; }
+  .nav-dropdown{ left: 0; right: auto; min-width: 240px; }
+}
+
+/* ---------- Subpages ---------- */
+body.subpage .page-card{
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* tighter typography inside tiles */
+.ordo1 p{ margin-bottom: 8px; }
+.ordo1 h3{ margin-bottom: 10px; }
+.ordo1 pre{ line-height: 1.25; margin: 10px 0; }
+.ordo1 .btn-row{ margin-top: 10px; }
