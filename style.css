@@ -170,6 +170,7 @@ main{
   color: var(--text);
 }
 
+
 .home-subtitle{
   max-width: 760px;
   margin: 0 auto;
@@ -177,11 +178,6 @@ main{
   line-height: 1.7;
   color: var(--muted);
   text-align: justify;
-
-  /* amélioration du justifié en français */
-  hyphens: auto;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
 }
 
 /* Responsive home */
@@ -191,10 +187,6 @@ main{
   }
   .home-hero{
     padding: 56px 18px;
-  }
-  .home-subtitle{
-    text-align: left;
-    hyphens: none;
   }
 }
 
