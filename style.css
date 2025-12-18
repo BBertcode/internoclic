@@ -205,12 +205,14 @@ main{
   line-height: 1.7;
   color: var(--muted);
   text-align: justify;
-
-  /* amélioration du justifié en français */
-  hyphens: auto;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
 }
+
+@media (max-width: 780px){
+  .home-subtitle{
+    text-align: left;
+  }
+}
+
 
 /* Responsive home */
 @media (max-width: 780px){
