@@ -75,28 +75,32 @@
     <div class="ordo1">
       <h3 class="titre-ordo">Adalimumab</h3>
 
-      <div class="form-row" style="margin:8px 0 10px;">
-        <label for="adalimumab-biosim"><strong>Biosimilaire :</strong></label>
-        <select id="adalimumab-biosim">
-          <option value="Amgevita" selected>Amgevita</option>
-          <option value="Amsparity">Amsparity</option>
-          <option value="Hukyndra">Hukyndra</option>
-          <option value="Hulio">Hulio</option>
-          <option value="Hyrimoz">Hyrimoz</option>
-          <option value="Hefiya">Hefiya</option>
-          <option value="Idacio">Idacio</option>
-          <option value="Imraldi">Imraldi</option>
-          <option value="Libmyris">Libmyris</option>
-          <option value="Yuflyma">Yuflyma</option>
-        </select>
-      </div>
+      <!-- Biosimilaire + Schéma sur la même ligne -->
+      <div class="form-row"
+           style="display:flex; align-items:center; gap:16px; margin:8px 0 10px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <label for="adalimumab-biosim"><strong>Biosimilaire :</strong></label>
+          <select id="adalimumab-biosim">
+            <option value="Amgevita" selected>Amgevita</option>
+            <option value="Amsparity">Amsparity</option>
+            <option value="Hukyndra">Hukyndra</option>
+            <option value="Hulio">Hulio</option>
+            <option value="Hyrimoz">Hyrimoz</option>
+            <option value="Hefiya">Hefiya</option>
+            <option value="Idacio">Idacio</option>
+            <option value="Imraldi">Imraldi</option>
+            <option value="Libmyris">Libmyris</option>
+            <option value="Yuflyma">Yuflyma</option>
+          </select>
+        </div>
 
-      <div class="form-row" style="margin:8px 0 10px;">
-        <label for="adalimumab-schema"><strong>Schéma :</strong></label>
-        <select id="adalimumab-schema">
-          <option value="Introduction" selected>Introduction</option>
-          <option value="Entretien">Entretien</option>
-        </select>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <label for="adalimumab-schema"><strong>Schéma :</strong></label>
+          <select id="adalimumab-schema">
+            <option value="Introduction" selected>Introduction</option>
+            <option value="Entretien">Entretien</option>
+          </select>
+        </div>
       </div>
 
       <p class="ordo2" id="adalimumab-ordo"></p>
@@ -155,7 +159,8 @@
     const line2 = "- Laisser le produit revenir à température ambiante 1 heure avant l’injection.";
 
     if (schema === "Entretien") {
-      adaP.innerHTML = `${base}1 stylo une fois toutes les 2 semaines en sous-cutané.<br/>${line2}`;
+      adaP.innerHTML =
+        `${base}1 stylo une fois toutes les 2 semaines en sous-cutané.<br/>${line2}`;
     } else {
       adaP.innerHTML =
         `${base}2 stylos soit 80 mg la première injection, puis 1 stylo une semaine après (J8), puis 1 stylo toutes les 2 semaines en sous-cutané.<br/>${line2}`;
@@ -176,7 +181,8 @@
     const line2 = "- Laisser le produit revenir à température ambiante 1 heure avant l’injection.";
 
     if (schema === "Entretien") {
-      ifxP.innerHTML = `${base}un stylo une fois toutes les 2 semaines.<br/>${line2}`;
+      ifxP.innerHTML =
+        `${base}un stylo une fois toutes les 2 semaines.<br/>${line2}`;
     } else {
       ifxP.innerHTML =
         `${base}un stylo une fois par semaine pendant 4 semaines puis un stylo toutes les 2 semaines.<br/>${line2}`;
