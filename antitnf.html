@@ -1,41 +1,42 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <meta charset="utf-8"/>
   <title>InternoClic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link href="style.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;family=Pixelify+Sans:wght@400..700&amp;family=Press+Start+2P&amp;family=VT323&amp;display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet"/>
 </head>
 
 <body class="subpage">
+
 <header class="site-header">
   <div class="header-inner">
-    <a aria-label="Retour à l'accueil" class="brand" href="index.html">
-      <img alt="Internoclic" class="brand-logo" src="Images/logo_65px.png"/>
+    <a class="brand" href="index.html" aria-label="Retour à l'accueil">
+      <img src="Images/logo_65px.png" alt="Internoclic" class="brand-logo"/>
       <span class="brand-name">Internoclic</span>
     </a>
 
-    <nav aria-label="Navigation principale" class="top-nav">
+    <nav class="top-nav" aria-label="Navigation principale">
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-link" href="cortico.html">Corticothérapie</a></li>
 
         <li class="nav-item has-dropdown">
-          <button aria-expanded="false" class="nav-trigger" type="button">
-            Immunosuppresseurs <span aria-hidden="true" class="caret">▾</span>
+          <button class="nav-trigger" type="button" aria-expanded="false">
+            Immunosuppresseurs <span class="caret">▾</span>
           </button>
           <div class="nav-dropdown">
             <a class="nav-dd-item" href="azathioprine.html">Azathioprine</a>
             <a class="nav-dd-item" href="mtx.html">Méthotrexate</a>
-            <a class="nav-dd-item" href="mycophenolate.html">Mycophénolate mofétyl</a>
+            <a class="nav-dd-item" href="mycophenolate.html">Mycophénolate mofétil</a>
           </div>
         </li>
 
         <li class="nav-item has-dropdown">
-          <button aria-expanded="false" class="nav-trigger" type="button">
-            Biothérapies <span aria-hidden="true" class="caret">▾</span>
+          <button class="nav-trigger" type="button" aria-expanded="false">
+            Biothérapies <span class="caret">▾</span>
           </button>
           <div class="nav-dropdown">
             <a class="nav-dd-item" href="antitnf.html">Anti-TNF alpha</a>
@@ -43,8 +44,8 @@
         </li>
 
         <li class="nav-item has-dropdown">
-          <button aria-expanded="false" class="nav-trigger" type="button">
-            Mesures associées <span aria-hidden="true" class="caret">▾</span>
+          <button class="nav-trigger" type="button" aria-expanded="false">
+            Mesures associées <span class="caret">▾</span>
           </button>
           <div class="nav-dropdown">
             <a class="nav-dd-item" href="osteoporose.html">Ostéoporose</a>
@@ -53,8 +54,8 @@
         </li>
 
         <li class="nav-item has-dropdown">
-          <button aria-expanded="false" class="nav-trigger" type="button">
-            Bilan diagnostique <span aria-hidden="true" class="caret">▾</span>
+          <button class="nav-trigger" type="button" aria-expanded="false">
+            Bilan diagnostique <span class="caret">▾</span>
           </button>
           <div class="nav-dropdown">
             <a class="nav-dd-item" href="uveite.html">Uvéites</a>
@@ -67,14 +68,15 @@
 
 <main class="ordo_liste">
   <div class="page-card">
+
     <h1>Anti-TNF alpha</h1>
 
-    <!-- Adalimumab -->
+    <!-- ================== Adalimumab ================== -->
     <div class="ordo1">
       <h3 class="titre-ordo">Adalimumab</h3>
 
-      <div class="form-row" style="margin: 8px 0 10px;">
-        <label for="adalimumab-biosim" style="margin-right:8px;"><strong>Biosimilaire :</strong></label>
+      <div class="form-row" style="margin:8px 0 10px;">
+        <label for="adalimumab-biosim"><strong>Biosimilaire :</strong></label>
         <select id="adalimumab-biosim">
           <option value="Amgevita" selected>Amgevita</option>
           <option value="Amsparity">Amsparity</option>
@@ -89,16 +91,24 @@
         </select>
       </div>
 
+      <div class="form-row" style="margin:8px 0 10px;">
+        <label for="adalimumab-schema"><strong>Schéma :</strong></label>
+        <select id="adalimumab-schema">
+          <option value="Introduction" selected>Introduction</option>
+          <option value="Entretien">Entretien</option>
+        </select>
+      </div>
+
       <p class="ordo2" id="adalimumab-ordo"></p>
-      <button class="copy-btn">Copier</button>
+      <button class="copy-btn" type="button">Copier</button>
     </div>
 
-    <!-- Infliximab (selon ta demande) -->
+    <!-- ================== Infliximab ================== -->
     <div class="ordo1">
       <h3 class="titre-ordo">Infliximab</h3>
 
-      <div class="form-row" style="margin: 8px 0 10px;">
-        <label for="infliximab-schema" style="margin-right:8px;"><strong>Schéma :</strong></label>
+      <div class="form-row" style="margin:8px 0 10px;">
+        <label for="infliximab-schema"><strong>Schéma :</strong></label>
         <select id="infliximab-schema">
           <option value="Introduction" selected>Introduction</option>
           <option value="Entretien">Entretien</option>
@@ -106,14 +116,14 @@
       </div>
 
       <p class="ordo2" id="infliximab-ordo"></p>
-      <button class="copy-btn">Copier</button>
+      <button class="copy-btn" type="button">Copier</button>
     </div>
 
-    <!-- Bilan pré-thérapeutique -->
+    <!-- ================== Bilan pré-thérapeutique ================== -->
     <div class="ordo1">
       <h3 class="titre-ordo">Bilan pré-thérapeutique</h3>
       <p class="ordo2">
-        Faire réaliser par un laboratoire d'analyses médicales, à jeun, à domicile si besoin,<br/>
+        Faire réaliser par un laboratoire d'analyses médicales, à jeun, à domicile si besoin :<br/><br/>
         - ACAN<br/>
         - Sérologies VIH, VHB, VHC<br/>
         - Quantiféron (traitement par anti-TNF alpha)<br/>
@@ -123,7 +133,7 @@
         - ASAT ALAT GGT PAL Bilirubine totale<br/>
         - EPP
       </p>
-      <button class="copy-btn">Copier</button>
+      <button class="copy-btn" type="button">Copier</button>
     </div>
 
   </div>
@@ -132,40 +142,50 @@
 <script src="script.js"></script>
 
 <script>
-  (function () {
-    // --- Adalimumab ---
-    const adaSelect = document.getElementById("adalimumab-biosim");
-    const adaP = document.getElementById("adalimumab-ordo");
+(function () {
+  // -------- Adalimumab --------
+  const adaSelect = document.getElementById("adalimumab-biosim");
+  const adaSchema = document.getElementById("adalimumab-schema");
+  const adaP = document.getElementById("adalimumab-ordo");
 
-    function renderAdalimumabText() {
-      const biosim = adaSelect.value || "Amgevita";
+  function renderAdalimumab() {
+    const biosim = adaSelect.value || "Amgevita";
+    const schema = adaSchema.value || "Introduction";
+    const base = `${biosim.toUpperCase()} 40 mg : `;
+    const line2 = "- Laisser le produit revenir à température ambiante 1 heure avant l’injection.";
+
+    if (schema === "Entretien") {
+      adaP.innerHTML = `${base}1 stylo une fois toutes les 2 semaines en sous-cutané.<br/>${line2}`;
+    } else {
       adaP.innerHTML =
-        `${biosim.toUpperCase()} 40mg : 2 stylos soit 80mg la première injection, puis 1 stylo une semaine après (J8), puis 1 stylo toutes les 2 semaines en sous-cutané.<br/>` +
-        `- Laisser le produit revenir à température ambiante 1 heure avant l’injection.`;
+        `${base}2 stylos soit 80 mg la première injection, puis 1 stylo une semaine après (J8), puis 1 stylo toutes les 2 semaines en sous-cutané.<br/>${line2}`;
     }
+  }
 
-    adaSelect.addEventListener("change", renderAdalimumabText);
-    renderAdalimumabText();
+  adaSelect.addEventListener("change", renderAdalimumab);
+  adaSchema.addEventListener("change", renderAdalimumab);
+  renderAdalimumab();
 
-    // --- "Infliximab" (texte REMSIMA 120mg, selon schéma) ---
-    const ifxSelect = document.getElementById("infliximab-schema");
-    const ifxP = document.getElementById("infliximab-ordo");
+  // -------- Infliximab --------
+  const ifxSelect = document.getElementById("infliximab-schema");
+  const ifxP = document.getElementById("infliximab-ordo");
 
-    function renderInfliximabText() {
-      const schema = ifxSelect.value || "Introduction";
-      const base = "REMSIMA 120mg : ";
-      const line2 = "- Laisser le produit revenir à température ambiante 1 heure avant l’injection.";
+  function renderInfliximab() {
+    const schema = ifxSelect.value || "Introduction";
+    const base = "REMSIMA 120 mg : ";
+    const line2 = "- Laisser le produit revenir à température ambiante 1 heure avant l’injection.";
 
-      if (schema === "Entretien") {
-        ifxP.innerHTML = `${base}un stylo une fois toutes les 2 semaines.<br/>${line2}`;
-      } else {
-        ifxP.innerHTML = `${base}un stylo une fois par semaine pendant 4 semaines puis un stylo toutes les 2 semaines.<br/>${line2}`;
-      }
+    if (schema === "Entretien") {
+      ifxP.innerHTML = `${base}un stylo une fois toutes les 2 semaines.<br/>${line2}`;
+    } else {
+      ifxP.innerHTML =
+        `${base}un stylo une fois par semaine pendant 4 semaines puis un stylo toutes les 2 semaines.<br/>${line2}`;
     }
+  }
 
-    ifxSelect.addEventListener("change", renderInfliximabText);
-    renderInfliximabText();
-  })();
+  ifxSelect.addEventListener("change", renderInfliximab);
+  renderInfliximab();
+})();
 </script>
 
 </body>
