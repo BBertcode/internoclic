@@ -413,13 +413,13 @@ body.subpage .page-card{
   }
 }
 
-/* ---------- Liens visibles dans les blocs d'ordonnance ---------- */
+/* ---------- Liens sobres dans les ordonnances ---------- */
 .ordo2 a{
-  color: var(--accent);
+  color: #1e40af;              /* bleu atténué, lisible */
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-thickness: 1px;
-  font-weight: 600;
+  font-weight: 550;
 }
 
 .ordo2 a:hover{
