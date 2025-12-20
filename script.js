@@ -60,7 +60,9 @@ async function loadSharedHeader() {
 
         // Rebranche les dropdowns après injection
         initHeaderDropdownsMobileOnly();
-    } catch (e) {
+        initSearch();
+        initSearchPopover();
+} catch (e) {
         // silence
     }
 }
@@ -118,4 +120,168 @@ function initHeaderDropdownsMobileOnly() {
             if (e.key === "Escape") closeAll();
         });
     }
+}
+
+
+// ===============================
+// Search (header) — desktop
+// ===============================
+function initSearch() {
+  const input = document.getElementById("site-search");
+  const results = document.getElementById("search-results");
+  if (!input || !results) return;
+
+  if (input.dataset.bound === "1") return;
+  input.dataset.bound = "1";
+
+  const index = Array.isArray(window.SEARCH_INDEX) ? window.SEARCH_INDEX : [];
+
+  function normalize(s) {
+    return (s || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function hide() {
+    results.style.display = "none";
+    results.innerHTML = "";
+  }
+
+  function render(items) {
+    if (!items.length) {
+      results.innerHTML = `<div style="padding:10px 12px; color:var(--muted);">Aucun résultat</div>`;
+      results.style.display = "block";
+      return;
+    }
+
+    results.innerHTML = items.slice(0, 10).map((it) => {
+  return `
+    <a href="${it.url}"
+       role="option"
+       style="display:block; padding:10px 12px; border-bottom:1px solid var(--border);">
+      <strong>${it.title}</strong>
+    </a>`;
+}).join("");
+
+
+    const last = results.querySelector("a:last-child");
+    if (last) last.style.borderBottom = "none";
+
+    results.style.display = "block";
+  }
+
+  function search(q) {
+    const nq = normalize(q).trim();
+    if (!nq) return [];
+
+    const nqParts = nq.split(/\s+/).filter(Boolean);
+
+    return index
+      .map((it) => {
+        const title = normalize(it.title);
+        const url = normalize(it.url);
+        const tokens = (it.tokens || []).map(normalize);
+        const hay = [title, url, ...tokens].join(" ");
+
+        let score = 0;
+        if (hay.includes(nq)) score += 3;
+        if (title.includes(nq)) score += 5;
+        if (tokens.some((t) => t.includes(nq))) score += 2;
+        if (nqParts.length > 1 && nqParts.every((p) => hay.includes(p))) score += 2;
+
+        return { it, score };
+      })
+      .filter((x) => x.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((x) => x.it);
+  }
+
+  input.addEventListener("input", () => render(search(input.value)));
+
+  input.addEventListener("focus", () => {
+    if (input.value.trim()) render(search(input.value));
+  });
+
+  document.addEventListener("click", (e) => {
+    const inside = e.target.closest(".header-search");
+    if (!inside) hide();
+  });
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      hide();
+      input.blur();
+    }
+  });
+
+  if (!document.body.dataset.searchHotkeysBound) {
+    document.body.dataset.searchHotkeysBound = "1";
+
+    document.addEventListener("keydown", (e) => {
+      const isMac = navigator.platform.toUpperCase().includes("MAC");
+      const modK = (isMac ? e.metaKey : e.ctrlKey) && e.key.toLowerCase() === "k";
+      const slash = e.key === "/" && !e.ctrlKey && !e.metaKey && !e.altKey;
+
+      if (modK || slash) {
+        const tag = (document.activeElement && document.activeElement.tagName) || "";
+        const typing =
+          ["INPUT", "TEXTAREA"].includes(tag) || document.activeElement?.isContentEditable;
+        if (slash && typing) return;
+
+        e.preventDefault();
+        input.focus();
+        input.select();
+      }
+    });
+  }
+}
+
+
+function initSearchPopover() {
+  const btn = document.querySelector(".search-btn");
+  const pop = document.getElementById("search-popover");
+  const input = document.getElementById("site-search");
+  const results = document.getElementById("search-results");
+
+  if (!btn || !pop || !input) return;
+  if (btn.dataset.bound === "1") return;
+  btn.dataset.bound = "1";
+
+  function openPopover() {
+    pop.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    input.focus();
+    input.select();
+  }
+
+  function closePopover() {
+    pop.hidden = true;
+    btn.setAttribute("aria-expanded", "false");
+    if (results) results.style.display = "none";
+  }
+
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const isOpen = btn.getAttribute("aria-expanded") === "true";
+    if (isOpen) closePopover();
+    else openPopover();
+  });
+
+  document.addEventListener("click", (e) => {
+    const inside = e.target.closest(".header-search");
+    if (!inside) closePopover();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePopover();
+
+    const isMac = navigator.platform.toUpperCase().includes("MAC");
+    const modK = (isMac ? e.metaKey : e.ctrlKey) && e.key.toLowerCase() === "k";
+
+    if (modK) {
+      e.preventDefault();
+      openPopover();
+    }
+  });
 }
