@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <title>InternoClic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="style.css" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet"/>
+
+  <!-- Tooltip léger (infobulle) -->
+  <style>
+    .info-tip{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:18px;
+      height:18px;
+      margin-left:8px;
+      border-radius:999px;
+      border:1px solid var(--border, #e5e7eb);
+      background: var(--card, #fff);
+      color: var(--muted, #6b7280);
+      font-size:12px;
+      line-height:1;
+      cursor:help;
+      position:relative;
+      user-select:none;
+    }
+    .info-tip:focus{ outline:2px solid rgba(37,99,235,0.35); outline-offset:2px; }
+    .info-tip[data-tip]::after{
+      content: attr(data-tip);
+      position:absolute;
+      left:50%;
+      top: calc(100% + 10px);
+      transform: translateX(-50%);
+      width: min(360px, 78vw);
+      padding:10px 12px;
+      border-radius:12px;
+      background: #111827;
+      color: #fff;
+      font-size:12px;
+      line-height:1.35;
+      box-shadow: 0 12px 30px rgba(17,24,39,0.22);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .12s ease;
+      z-index:50;
+      white-space: normal;
+    }
+    .info-tip[data-tip]::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top: calc(100% + 4px);
+      transform: translateX(-50%);
+      border:6px solid transparent;
+      border-bottom-color:#111827;
+      opacity:0;
+      transition:opacity .12s ease;
+      z-index:51;
+    }
+    .info-tip:hover::after,
+    .info-tip:hover::before,
+    .info-tip:focus::after,
+    .info-tip:focus::before{
+      opacity:1;
+    }
+  </style>
+</head>
+
+<body class="subpage">
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="Retour à l'accueil">
+      <img src="Images/logo_65px.png" alt="Internoclic" class="brand-logo"/>
+      <span class="brand-name">Internoclic</span>
+    </a>
+
+    <nav class="top-nav" aria-label="Navigation principale">
+      <ul class="nav-list">
+        <li class="nav-item"><a class="nav-link" href="cortico.html">Corticothérapie</a></li>
+
+        <li class="nav-item has-dropdown">
+          <button class="nav-trigger" type="button" aria-expanded="false">
+            Immunosuppresseurs <span class="caret">▾</span>
+          </button>
+          <div class="nav-dropdown">
+            <a class="nav-dd-item" href="azathioprine.html">Azathioprine</a>
+            <a class="nav-dd-item" href="mtx.html">Méthotrexate</a>
+            <a class="nav-dd-item" href="mycophenolate.html">Mycophénolate mofétil</a>
+          </div>
+        </li>
+
+        <li class="nav-item has-dropdown">
+          <button class="nav-trigger" type="button" aria-expanded="false">
+            Biothérapies <span class="caret">▾</span>
+          </button>
+          <div class="nav-dropdown">
+            <a class="nav-dd-item" href="antitnf.html">Anti-TNF alpha</a>
+            <a class="nav-dd-item" href="tocilizumab.html">Tocilizumab</a>
+          </div>
+        </li>
+
+        <li class="nav-item has-dropdown">
+          <button class="nav-trigger" type="button" aria-expanded="false">
+            Mesures associées <span class="caret">▾</span>
+          </button>
+          <div class="nav-dropdown">
+            <a class="nav-dd-item" href="osteoporose.html">Ostéoporose</a>
+            <a class="nav-dd-item" href="vaccins.html">Vaccination</a>
+          </div>
+        </li>
+
+        <li class="nav-item has-dropdown">
+          <button class="nav-trigger" type="button" aria-expanded="false">
+            Bilan diagnostique <span class="caret">▾</span>
+          </button>
+          <div class="nav-dropdown">
+            <a class="nav-dd-item" href="uveite.html">Uvéites</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="ordo_liste">
+  <div class="page-card">
+
+    <h1>Tocilizumab</h1>
+
+    <!-- ================== Ordonnance Tocilizumab ================== -->
+    <div class="ordo1">
+      <h3 class="titre-ordo">Ordonnance de Tocilizumab</h3>
+
+      <div class="form-row" style="margin:8px 0 10px;">
+        <label for="toci-specialite"><strong>Spécialité :</strong></label>
+        <select id="toci-specialite">
+          <option value="Tyenne" selected>Tyenne</option>
+          <option value="Roactemra">Roactemra</option>
+        </select>
+      </div>
+
+      <p class="ordo2" id="toci-ordo"></p>
+      <button class="copy-btn" type="button">Copier</button>
+    </div>
+
+    <!-- ================== Bilan pré-thérapeutique ================== -->
+    <div class="ordo1">
+      <h3 class="titre-ordo">
+        Bilan pré-thérapeutique
+        <span
+          class="info-tip"
+          tabindex="0"
+          role="img"
+          aria-label="Information"
+          data-tip="Ne pas oublier la radiographie si non réalisée, et la recherche d’un antécédent de diverticulite."
+        >i</span>
+      </h3>
+
+      <p class="ordo2">
+        Faire réaliser par un laboratoire d'analyses médicales, à jeun, à domicile si besoin :<br/><br/>
+        - Sérologies VIH, VHB, VHC<br/>
+        - Quantiféron<br/>
+        - Ionogramme sanguin, créatinine<br/>
+        - NFP<br/>
+        - CRP<br/>
+        - ASAT ALAT GGT PAL Bilirubine totale<br/>
+        - EPP<br/>
+        - Bilan lipidique (cholestérol total, LDLc, HDLc, triglycérides)
+      </p>
+      <button class="copy-btn" type="button">Copier</button>
+    </div>
+
+    <!-- ================== Suivi biologique ================== -->
+    <div class="ordo1">
+      <h3 class="titre-ordo">Suivi biologique</h3>
+
+      <p class="ordo2">
+        Faire réaliser dans un laboratoire, à jeun, à domicile si besoin :<br/><br/>
+        <strong>Dans 1 mois :</strong><br/>
+        - ASAT ALAT GGT PAL Bilirubine totale<br/>
+        - NFP<br/><br/>
+
+        <strong>Dans 3 mois :</strong><br/>
+        - ASAT ALAT GGT PAL Bilirubine totale<br/>
+        - NFP<br/>
+        - Ionogramme sanguin, créatinine, glycémie<br/>
+        - Bilan lipidique (cholestérol total, LDLc, HDLc, triglycérides)
+      </p>
+
+      <button class="copy-btn" type="button">Copier</button>
+    </div>
+
+  </div>
+</main>
+
+<script src="script.js"></script>
+
+<script>
+(function () {
+  const specSelect = document.getElementById("toci-specialite");
+  const tociP = document.getElementById("toci-ordo");
+
+  function renderTocilizumab() {
+    const spec = specSelect.value || "Tyenne";
+    tociP.textContent =
+      `TOCILIZUMAB (${spec}) 162 mg : 1 stylo une fois toutes les semaines en sous-cutané.`;
+  }
+
+  specSelect.addEventListener("change", renderTocilizumab);
+  renderTocilizumab();
+})();
+</script>
+
+</body>
+</html>
