@@ -52,12 +52,27 @@
     </nav>
   
 
-    <!-- Recherche -->
+    <!-- Search icon + popover -->
     <div class="header-search">
-      <label for="site-search" class="sr-only">Rechercher</label>
-      <input id="site-search" type="search" placeholder="Rechercher… (Ctrl+K)" autocomplete="off" spellcheck="false"/>
-      <div id="search-results" class="search-results" role="listbox" aria-label="Résultats de recherche"></div>
+      <button class="search-btn" type="button" aria-label="Rechercher" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M10 18a8 8 0 1 1 5.293-14.01A8 8 0 0 1 10 18Zm11 3-5.2-5.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="search-popover" id="search-popover" hidden>
+        <label for="site-search" class="sr-only">Rechercher</label>
+        <input
+          id="site-search"
+          type="search"
+          placeholder="Rechercher… (Ctrl+K)"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <div id="search-results" class="search-results" role="listbox" aria-label="Résultats de recherche"></div>
+      </div>
     </div>
+</div>
 
 </div>
 </header>

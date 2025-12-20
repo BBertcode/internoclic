@@ -61,6 +61,7 @@ async function loadSharedHeader() {
         // Rebranche les dropdowns après injection
         initHeaderDropdownsMobileOnly();
         initSearch();
+        initSearchPopover();
 } catch (e) {
         // silence
     }
@@ -237,4 +238,53 @@ function initSearch() {
       }
     });
   }
+}
+
+
+function initSearchPopover() {
+  const btn = document.querySelector(".search-btn");
+  const pop = document.getElementById("search-popover");
+  const input = document.getElementById("site-search");
+  const results = document.getElementById("search-results");
+
+  if (!btn || !pop || !input) return;
+  if (btn.dataset.bound === "1") return;
+  btn.dataset.bound = "1";
+
+  function openPopover() {
+    pop.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    input.focus();
+    input.select();
+  }
+
+  function closePopover() {
+    pop.hidden = true;
+    btn.setAttribute("aria-expanded", "false");
+    if (results) results.style.display = "none";
+  }
+
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const isOpen = btn.getAttribute("aria-expanded") === "true";
+    if (isOpen) closePopover();
+    else openPopover();
+  });
+
+  document.addEventListener("click", (e) => {
+    const inside = e.target.closest(".header-search");
+    if (!inside) closePopover();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePopover();
+
+    const isMac = navigator.platform.toUpperCase().includes("MAC");
+    const modK = (isMac ? e.metaKey : e.ctrlKey) && e.key.toLowerCase() === "k";
+
+    if (modK) {
+      e.preventDefault();
+      openPopover();
+    }
+  });
 }

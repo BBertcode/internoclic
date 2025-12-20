@@ -447,43 +447,76 @@ body.subpage h1{
   white-space:nowrap; border:0;
 }
 
-.header-search{
-  margin-left:auto;
-  position:relative;
-  min-width: 260px;
-  max-width: 420px;
+/* --- Header: compact nav --- */
+.top-nav .nav-link,
+.top-nav .nav-trigger{
+  font-size: 14px;
+  padding: 10px 10px;
 }
 
-.header-search input[type="search"]{
-  width:100%;
-  padding:10px 12px;
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:var(--card);
-  color:var(--text);
+/* --- Search icon + popover --- */
+.header-search{
+  margin-left: auto;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.search-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 12px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.search-btn svg{
+  width: 18px;
+  height: 18px;
+}
+
+.search-popover{
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: min(420px, 72vw);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  padding: 10px;
+  z-index: 999;
+}
+
+.search-popover input[type="search"]{
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--text);
 }
 
 .search-results{
-  display:none;
-  position:absolute;
-  top: calc(100% + 8px);
-  left:0; right:0;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  box-shadow: var(--shadow-sm);
-  overflow:hidden;
-  z-index:999;
+  margin-top: 8px;
+  display: none; /* affiché via JS */
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
 }
 
 .search-results a{
   display:block;
   padding:10px 12px;
-  border-bottom:1px solid var(--border);
+  border-radius: 10px;
 }
 
-.search-results a:last-child{
-  border-bottom:none;
+.search-results a:hover{
+  background: rgba(17,24,39,0.06);
 }
 
 .search-results strong{ display:block; }
