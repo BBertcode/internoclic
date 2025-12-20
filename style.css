@@ -436,3 +436,55 @@ body.subpage h1{
   color: var(--text);
 }
 
+
+
+/* ---------- Header search ---------- */
+.sr-only{
+  position:absolute !important;
+  width:1px; height:1px;
+  padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0);
+  white-space:nowrap; border:0;
+}
+
+.header-search{
+  margin-left:auto;
+  position:relative;
+  min-width: 260px;
+  max-width: 420px;
+}
+
+.header-search input[type="search"]{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--card);
+  color:var(--text);
+}
+
+.search-results{
+  display:none;
+  position:absolute;
+  top: calc(100% + 8px);
+  left:0; right:0;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow: var(--shadow-sm);
+  overflow:hidden;
+  z-index:999;
+}
+
+.search-results a{
+  display:block;
+  padding:10px 12px;
+  border-bottom:1px solid var(--border);
+}
+
+.search-results a:last-child{
+  border-bottom:none;
+}
+
+.search-results strong{ display:block; }
+.search-results div{ color:var(--muted); font-size:12px; }
