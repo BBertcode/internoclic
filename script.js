@@ -155,18 +155,15 @@ function initSearch() {
       return;
     }
 
-    results.innerHTML = items
-      .slice(0, 10)
-      .map((it) => {
-        return `
-          <a href="${it.url}"
-             role="option"
-             style="display:block; padding:10px 12px; border-bottom:1px solid var(--border);">
-            <strong>${it.title}</strong>
-            <div style="color:var(--muted); font-size:12px;">${it.url}</div>
-          </a>`;
-      })
-      .join("");
+    results.innerHTML = items.slice(0, 10).map((it) => {
+  return `
+    <a href="${it.url}"
+       role="option"
+       style="display:block; padding:10px 12px; border-bottom:1px solid var(--border);">
+      <strong>${it.title}</strong>
+    </a>`;
+}).join("");
+
 
     const last = results.querySelector("a:last-child");
     if (last) last.style.borderBottom = "none";
