@@ -86,7 +86,8 @@
       <div class="form-row" style="margin:8px 0 10px;">
         <label for="toci-specialite"><strong>Spécialité :</strong></label>
         <select id="toci-specialite">
-          <option value="Tyenne" selected>Tyenne</option>
+          <option value="Avtozmab" selected>Avtozmab</option>
+          <option value="Tyenne">Tyenne</option>
           <option value="Roactemra">Roactemra</option>
         </select>
       </div>
@@ -154,7 +155,7 @@
   const tociP = document.getElementById("toci-ordo");
 
   function renderTocilizumab() {
-    const spec = specSelect.value || "Tyenne";
+    const spec = specSelect.value || "Avtozmab";
     tociP.textContent =
       `TOCILIZUMAB (${spec}) 162 mg : 1 stylo une fois par semaine en sous-cutané.`;
   }
