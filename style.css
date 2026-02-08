@@ -292,7 +292,8 @@ p{ color: var(--muted); margin-bottom: 14px; }
 }
 
 .ordo2{
-  white-space: normal;
+  /* Preserve explicit line breaks in generated prescriptions (\n) */
+  white-space: pre-wrap;
   text-align: left;
   background: #f9fafb;
   border: 1px solid var(--border);

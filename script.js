@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function normalizeCopiedText(text) {
         return text
+            // If "<br>" has been inserted as plain text (e.g. via textContent), convert it.
+            .replace(/<br\s*\/?>/gi, "\n")
             .replace(/\r\n/g, "\n")
             .split("\n")
             .map(line => line.trimStart())
