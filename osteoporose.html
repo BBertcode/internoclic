@@ -36,17 +36,51 @@
 <button class="copy-btn">Copier</button>
 </div>
 <div class="ordo1">
-<h3 class="titre-ordo">Biphosphonates oraux (supprimer les lignes inutiles)</h3>
-<p class="ordo2">
-                    RISEDRONATE 75 mg : 1 comprimé les 2 premiers jours de chaque mois<br/>
-                    ALENDRONATE 70 mg : 1 comprimé par semaine<br/>
-                    RISEDRONATE 35 mg : 1 comprimé par semaine<br/>
-                    A prendre le matin à jeun avec un verre d'eau plate. Ne pas manger ni se recoucher dans les 30 minutes qui suivent.
-                </p>
-<button class="copy-btn">Copier</button>
+<h3 class="titre-ordo">Biphosphonates oraux</h3>
+
+<div class="form-row" style="margin:8px 0 10px;">
+  <label for="bipho-specialite"><strong>Spécialité :</strong></label>
+  <select id="bipho-specialite">
+    <option value="risedronate_mensuel" selected>Risédronate mensuel (75 mg)</option>
+    <option value="risedronate_hebdo">Risédronate hebdomadaire (35 mg)</option>
+    <option value="alendronate">Alendronate hebdomadaire (70 mg)</option>
+  </select>
+</div>
+
+<p class="ordo2" id="bipho-ordo" style="white-space: pre-line;"></p>
+<button class="copy-btn" type="button">Copier</button>
 </div>
 </div></main>
 <script src="search-index.js"></script>
 <script src="script.js"></script>
+
+<script>
+(function () {
+  const select = document.getElementById("bipho-specialite");
+  const p = document.getElementById("bipho-ordo");
+  if (!select || !p) return;
+
+  function renderBipho() {
+    const v = select.value;
+
+    let ligne1 = "";
+    if (v === "risedronate_mensuel") {
+      ligne1 = "RISEDRONATE 75 mg : 1 comprimé les 2 premiers jours de chaque mois";
+    } else if (v === "risedronate_hebdo") {
+      ligne1 = "RISEDRONATE 35 mg : 1 comprimé par semaine";
+    } else if (v === "alendronate") {
+      ligne1 = "ALENDRONATE 70 mg : 1 comprimé par semaine";
+    }
+
+    p.textContent =
+      `${ligne1}\n` +
+      "A prendre le matin à jeun avec un verre d'eau plate. Ne pas manger ni se recoucher dans les 30 minutes qui suivent.";
+  }
+
+  select.addEventListener("change", renderBipho);
+  renderBipho();
+})();
+</script>
+
 </body>
 </html>
