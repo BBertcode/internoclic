@@ -5,12 +5,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const buttons = document.querySelectorAll(".copy-btn");
 
     function normalizeCopiedText(text) {
-        return text
+        const normalized = (text || "")
+            // If "<br>" has been inserted as plain text (e.g. via textContent), convert it.
+            .replace(/<br\s*\/?>/gi, "\n")
             .replace(/\r\n/g, "\n")
+            // Normalise les espaces insécables
+            .replace(/\u00A0/g, " ")
             .split("\n")
-            .map(line => line.trimStart())
+            // Enlève l'indentation liée au formatage du HTML
+            .map(line => line.trim())
             .join("\n")
+            // Évite les blocs de lignes vides énormes
+            .replace(/\n{3,}/g, "\n\n")
             .trim();
+
+        return normalized;
     }
 
     buttons.forEach(button => {

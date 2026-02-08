@@ -292,6 +292,9 @@ p{ color: var(--muted); margin-bottom: 14px; }
 }
 
 .ordo2{
+  /* Affichage "comme avant" : les <br> gèrent les retours à la ligne.
+     On évite que les retours à la ligne / tabulations du code source HTML
+     créent des lignes vides ou des indentations visibles. */
   white-space: normal;
   text-align: left;
   background: #f9fafb;
