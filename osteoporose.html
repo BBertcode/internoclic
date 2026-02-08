@@ -65,16 +65,16 @@
 
     let ligne1 = "";
     if (v === "risedronate_mensuel") {
-      ligne1 = "RISEDRONATE 75 mg : 1 comprimé les 2 premiers jours de chaque mois";
+      ligne1 = "RISEDRONATE 75 mg : 1 comprimé les 2 premiers jours de chaque mois.";
     } else if (v === "risedronate_hebdo") {
-      ligne1 = "RISEDRONATE 35 mg : 1 comprimé par semaine";
+      ligne1 = "RISEDRONATE 35 mg : 1 comprimé par semaine.";
     } else if (v === "alendronate") {
-      ligne1 = "ALENDRONATE 70 mg : 1 comprimé par semaine";
+      ligne1 = "ALENDRONATE 70 mg : 1 comprimé par semaine.";
     }
 
     p.textContent =
       `${ligne1}\n` +
-      "A prendre le matin à jeun avec un verre d'eau plate. Ne pas manger ni se recoucher dans les 30 minutes qui suivent.";
+      "- A prendre le matin à jeun avec un verre d'eau plate. Ne pas manger ni se recoucher dans les 30 minutes qui suivent.";
   }
 
   select.addEventListener("change", renderBipho);
