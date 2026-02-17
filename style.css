@@ -507,9 +507,12 @@ body.subpage h1{
 
 .search-results{
   margin-top: 8px;
-  display: none; /* affiché via JS */
   border-top: 1px solid var(--border);
   padding-top: 8px;
+}
+
+.search-results:empty{
+  display: none;
 }
 
 .search-results a{
