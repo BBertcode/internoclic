@@ -111,16 +111,62 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (!dd.contains(e.target)) dd.classList.remove("open");
                     });
                 });
+
+                // Initialise la recherche maintenant que le header est dans le DOM
+                initSearch(headerContainer);
             })
             .catch(err => console.error("Erreur chargement header:", err));
     }
 
     // ===============================
-    // Search (if present)
+    // Search — initialisé après le fetch du header
     // ===============================
-    const searchInput = document.getElementById("searchInput");
-    const resultsContainer = document.getElementById("results");
-    if (searchInput && resultsContainer && typeof window.SEARCH_INDEX !== "undefined") {
+    function initSearch(container) {
+        const searchBtn = container.querySelector(".search-btn");
+        const searchPopover = container.querySelector("#search-popover");
+        const searchInput = container.querySelector("#site-search");
+        const resultsContainer = container.querySelector("#search-results");
+
+        // Ouvre/ferme le popover au clic sur le bouton loupe
+        if (searchBtn && searchPopover) {
+            searchBtn.addEventListener("click", () => {
+                const isHidden = searchPopover.hasAttribute("hidden");
+                if (isHidden) {
+                    searchPopover.removeAttribute("hidden");
+                    searchBtn.setAttribute("aria-expanded", "true");
+                    if (searchInput) searchInput.focus();
+                } else {
+                    searchPopover.setAttribute("hidden", "");
+                    searchBtn.setAttribute("aria-expanded", "false");
+                }
+            });
+
+            // Ferme le popover si clic en dehors
+            document.addEventListener("click", (e) => {
+                if (!container.contains(e.target)) {
+                    searchPopover.setAttribute("hidden", "");
+                    searchBtn.setAttribute("aria-expanded", "false");
+                }
+            });
+
+            // Raccourci Ctrl+K
+            document.addEventListener("keydown", (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+                    e.preventDefault();
+                    searchPopover.removeAttribute("hidden");
+                    searchBtn.setAttribute("aria-expanded", "true");
+                    if (searchInput) searchInput.focus();
+                }
+                if (e.key === "Escape") {
+                    searchPopover.setAttribute("hidden", "");
+                    searchBtn.setAttribute("aria-expanded", "false");
+                }
+            });
+        }
+
+        if (!searchInput || !resultsContainer) return;
+        if (typeof window.SEARCH_INDEX === "undefined") return;
+
         function escapeHtml(str) {
             return (str || "")
                 .replace(/&/g, "&amp;")
@@ -136,7 +182,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 resultsContainer.innerHTML = "<div class='search-empty'>Aucun résultat</div>";
                 return;
             }
-
             results.forEach(item => {
                 const a = document.createElement("a");
                 a.className = "search-result";
@@ -155,14 +200,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 resultsContainer.innerHTML = "";
                 return;
             }
-
+            // Correction : utilisation de item.tokens (et non item.keywords)
             const results = window.SEARCH_INDEX
                 .filter(item => {
-                    const hay = (item.title + " " + (item.section || "") + " " + (item.keywords || "")).toLowerCase();
+                    const tokens = Array.isArray(item.tokens) ? item.tokens.join(" ") : "";
+                    const hay = (item.title + " " + (item.section || "") + " " + tokens).toLowerCase();
                     return hay.includes(q);
                 })
                 .slice(0, 30);
-
             renderResults(results);
         });
     }
