@@ -94,21 +94,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 headerContainer.innerHTML = data;
 
                 // Active menu dropdown on click (mobile)
-                const dropdownToggles = headerContainer.querySelectorAll(".dropdown-toggle");
+                const dropdownToggles = headerContainer.querySelectorAll(".nav-trigger");
                 dropdownToggles.forEach(toggle => {
                     toggle.addEventListener("click", (e) => {
                         e.preventDefault();
-                        const parent = toggle.closest(".dropdown");
+                        const parent = toggle.closest(".has-dropdown");
                         if (!parent) return;
-                        parent.classList.toggle("open");
+                        const isOpen = parent.classList.toggle("open");
+                        toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
                     });
                 });
 
                 // Close dropdowns on outside click
                 document.addEventListener("click", (e) => {
-                    const dropdowns = headerContainer.querySelectorAll(".dropdown.open");
+                    const dropdowns = headerContainer.querySelectorAll(".has-dropdown.open");
                     dropdowns.forEach(dd => {
-                        if (!dd.contains(e.target)) dd.classList.remove("open");
+                        if (!dd.contains(e.target)) {
+                            dd.classList.remove("open");
+                            const trigger = dd.querySelector(".nav-trigger");
+                            if (trigger) trigger.setAttribute("aria-expanded", "false");
+                        }
                     });
                 });
 
@@ -212,20 +217,5 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // ===============================
-    // Dropdown open/close (generic)
-    // ===============================
-    document.querySelectorAll(".dropdown-toggle").forEach(toggle => {
-        toggle.addEventListener("click", function (e) {
-            e.preventDefault();
-            const parent = toggle.closest(".dropdown");
-            if (parent) parent.classList.toggle("open");
-        });
-    });
 
-    document.addEventListener("click", function (e) {
-        document.querySelectorAll(".dropdown.open").forEach(dd => {
-            if (!dd.contains(e.target)) dd.classList.remove("open");
-        });
-    });
 });
