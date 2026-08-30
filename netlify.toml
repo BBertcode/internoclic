@@ -1,0 +1,12 @@
+# Configuration Netlify pour internoclic.fr
+#
+# Le site reste un site statique servi depuis la racine du depot ;
+# on ajoute simplement un dossier de fonctions pour la synchronisation
+# des extraits de texte.
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"

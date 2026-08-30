@@ -1,0 +1,9 @@
+{
+  "name": "internoclic",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site internoclic.fr + fonction de synchronisation des extraits de texte",
+  "dependencies": {
+    "@netlify/blobs": "^11.0.2"
+  }
+}
