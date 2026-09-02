@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planning médical</title>
+<style>
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+:root{
+  --bg:#F4F5F3; --paper:#FFFFFF; --ink:#1B2430; --ink-2:#4A5568; --ink-3:#8B95A5;
+  --line:#D9DEE5; --line-2:#ECEFF3;
+  --accent:#1F5FA8; --accent-dark:#184E8B; --accent-bg:#E5EDF8;
+  --danger:#B42318; --danger-bg:#FDF1EF; --danger-line:#F1C4BC;
+  --r:6px;
+}
+html{font-size:14px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.35;font-variant-numeric:tabular-nums}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{margin:0;font-weight:600}
+h1{font-size:1.35rem;letter-spacing:-.01em;white-space:nowrap}
+h2{font-size:1rem;color:var(--ink-2)}
+h3{font-size:.95rem}
+p{margin:0}
+.muted{color:var(--ink-3);font-size:.9rem;margin-top:8px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Barre du haut */
+.topbar{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:20px;padding:10px 20px;flex-wrap:wrap}
+.brand{font-weight:700;color:var(--accent)}
+.weeknav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.controls{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.user{font-size:.9rem;color:var(--ink-2)}
+.user select{margin-left:4px;padding:5px 6px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);color:var(--ink)}
+.datepick{padding:4px 6px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);color:var(--ink-2)}
+
+.btn{border:1px solid var(--line);background:var(--paper);border-radius:var(--r);padding:6px 11px;cursor:pointer;line-height:1.2;white-space:nowrap}
+.btn:hover{background:var(--line-2)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:disabled:hover{background:var(--paper)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-dark)}
+.btn.danger{background:var(--danger);border-color:var(--danger);color:#fff}
+.btn.danger:hover{background:#9A1D14}
+.btn.link{border-color:transparent;background:transparent;color:var(--accent);padding:6px 6px}
+.btn.link:hover{text-decoration:underline;background:transparent}
+.btn.icon{padding:3px 10px;font-size:1.15rem;line-height:1.1}
+
+.pill{font-size:.8rem;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2);background:var(--line-2);white-space:nowrap}
+.pill-now{color:var(--accent);background:var(--accent-bg);border-color:#C5D6EE}
+.pill-lock{color:#7A5A00;background:#FBF1DF;border-color:#EBD6A6}
+.pill-warn{color:var(--danger);background:var(--danger-bg);border-color:var(--danger-line)}
+.pill-tpl{color:#5B3A8E;background:#EEE8F8;border-color:#D6C8EE}
+.hint{color:var(--ink-3);font-size:.9rem}
+
+/* Grille */
+.wrap{padding:16px 20px 0;overflow-x:auto}
+.grid{border-collapse:separate;border-spacing:0;width:100%;min-width:960px;table-layout:fixed;background:var(--paper);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.grid th{font-weight:600;padding:8px 6px;text-align:center;background:var(--paper)}
+.grid th.corner{width:132px;border-bottom:1px solid var(--line)}
+.grid th.day{border-bottom:1px solid var(--line-2);border-left:2px solid var(--line)}
+.grid th.day .date{font-weight:400;color:var(--ink-3);margin-left:4px}
+.grid th.half{font-weight:500;font-size:.85rem;color:var(--ink-2);border-bottom:1px solid var(--line);padding:4px 6px}
+.grid th.half:nth-child(odd){border-left:2px solid var(--line)}
+.grid th.post{text-align:left;padding:10px 12px;color:var(--pc);border-left:4px solid var(--pc);border-bottom:1px solid var(--line-2);vertical-align:top;white-space:nowrap}
+.grid td.cell{background:var(--pt);vertical-align:top;padding:6px;height:66px;border-bottom:1px solid var(--line-2);border-left:1px solid #fff}
+.grid td.cell:nth-child(even){border-left:2px solid var(--line)}
+.grid tr.post-row:last-child th.post,.grid tr.post-row:last-child td.cell{border-bottom:0}
+
+.tile{display:block;padding:4px 8px;margin-bottom:4px;border-radius:5px;background:color-mix(in srgb,var(--dc) 16%,#fff);border:1px solid color-mix(in srgb,var(--dc) 35%,#fff);border-left:3px solid var(--dc);color:color-mix(in srgb,var(--dc) 70%,#000);font-weight:500;font-size:.93rem;cursor:grab;user-select:none;-webkit-user-select:none}
+.tile:last-child{margin-bottom:0}
+.tile[draggable="false"]{cursor:default}
+.tile:active{cursor:grabbing}
+.tile.dragging{opacity:.35}
+.tile.pt{border-style:dashed;border-left-style:solid}
+@supports not (color:color-mix(in srgb,red,blue)){.tile{background:#fff;color:var(--ink)}}
+
+.cell.target{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--pc) 45%,#fff)}
+.cell.over{box-shadow:inset 0 0 0 2px var(--pc);background:color-mix(in srgb,var(--pt) 60%,#fff)}
+.cell.alert{background:var(--danger-bg);box-shadow:inset 0 0 0 1px var(--danger-line)}
+.cell.alert.target{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--pc) 45%,#fff)}
+.cell.alert.over{box-shadow:inset 0 0 0 2px var(--pc)}
+.alert-msg{display:block;color:var(--danger);font-size:.8rem;padding:2px 4px}
+
+/* Hotline et notes */
+.hotline-sec,.notes-sec{padding:16px 20px 0}
+.notes-sec{padding-bottom:40px}
+.hotline-wrap{overflow-x:auto;margin-top:8px}
+.hotline td{padding:0;background:var(--paper);border-bottom:1px solid var(--line-2);border-left:1px solid var(--line-2)}
+.hotline td:nth-child(even){border-left:2px solid var(--line)}
+.hotline tbody tr:last-child th,.hotline tbody tr:last-child td{border-bottom:0}
+.hotline input{width:100%;border:0;background:transparent;padding:9px 8px;outline-offset:-2px}
+.hotline input:disabled{color:var(--ink);opacity:1;-webkit-text-fill-color:var(--ink)}
+.hotline input::placeholder{color:var(--ink-3);opacity:.55}
+.hotline input::selection{background:var(--accent-bg);color:var(--accent)}
+.notes-sec textarea{display:block;width:100%;margin-top:8px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper);resize:vertical;min-height:90px}
+.notes-sec textarea:disabled{color:var(--ink);opacity:1;-webkit-text-fill-color:var(--ink)}
+.print-notes{display:none}
+
+/* Semaine inexistante */
+.create{margin:48px auto;max-width:560px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:24px}
+.create p{margin-bottom:14px}
+.create-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.create select{padding:6px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);margin-left:6px}
+
+/* Panneaux latéraux */
+.overlay{position:fixed;inset:0;background:rgba(20,28,40,.25);z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--paper);border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(20,28,40,.12);z-index:21;display:flex;flex-direction:column}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line)}
+.drawer-head h2{color:var(--ink);font-size:1.1rem}
+.drawer-body{padding:16px 18px;overflow-y:auto}
+.list{list-style:none;margin:0;padding:0}
+.item{padding:12px 0;border-bottom:1px solid var(--line-2)}
+.item .name{font-weight:600}
+.item .meta{color:var(--ink-3);font-size:.85rem;margin-left:8px}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px}
+.row input[type=text]{flex:1;min-width:140px;padding:6px 8px;border:1px solid var(--line);border-radius:var(--r)}
+.row select{padding:6px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);margin-left:4px;max-width:100%}
+.newtpl{padding-bottom:16px;border-bottom:1px solid var(--line)}
+.listhead{margin:16px 0 2px}
+.confirm{margin-top:8px;padding:10px;background:var(--danger-bg);border:1px solid var(--danger-line);border-radius:var(--r);font-size:.92rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.section{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.history{list-style:none;margin:0;padding:0}
+.history li{display:grid;grid-template-columns:auto auto 1fr;gap:4px 10px;padding:8px 0;border-bottom:1px solid var(--line-2);font-size:.92rem;align-items:baseline}
+.history time{color:var(--ink-3);white-space:nowrap}
+.doctor .name{font-weight:500}
+.doctor input[type=color]{width:34px;height:30px;padding:2px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);cursor:pointer}
+.check{display:flex;align-items:center;gap:4px;font-size:.9rem;white-space:nowrap}
+details{margin-top:6px}
+summary{cursor:pointer;font-size:.9rem;color:var(--accent)}
+.pt-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}
+.pt-day{display:flex;flex-direction:column;gap:3px;font-size:.85rem}
+.pt-day span{font-weight:600;color:var(--ink-2)}
+.pt-day label{display:flex;align-items:center;gap:3px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 14px;border-radius:var(--r);z-index:30;font-size:.92rem}
+
+/* Connexion et compte */
+.auth{max-width:400px;margin:70px auto;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:28px 28px 22px;display:flex;flex-direction:column;gap:12px}
+.auth .brand.big{font-size:1.05rem}
+.auth h1{font-size:1.25rem;white-space:normal}
+.auth label{display:flex;flex-direction:column;gap:4px;font-size:.9rem;color:var(--ink-2)}
+.auth input{padding:8px 10px;border:1px solid var(--line);border-radius:var(--r);font-size:1rem;color:var(--ink)}
+.btn.wide{width:100%;padding:9px}
+.auth-err{color:var(--danger);font-size:.92rem}
+.auth-msg{color:#1F6E3A;font-size:.92rem;margin-top:8px}
+.who{font-size:.9rem;color:var(--ink-2)}
+.rt{width:9px;height:9px;border-radius:50%;background:var(--line);display:inline-block;flex:none}
+.rt.on{background:#2F8F5B}
+.rt.off{background:#C7621B}
+code{background:var(--line-2);padding:1px 5px;border-radius:4px;font-size:.9em}
+.create h2{color:var(--ink);margin-bottom:8px}
+.create p+p{margin-top:8px}
+.drawer .meta{display:block;margin:4px 0 0}
+
+/* Impression */
+@media print{
+  @page{size:A4 landscape;margin:9mm}
+  body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:11px}
+  .topbar{position:static;border:0;padding:0 0 6px}
+  .brand,.controls,.datepick,.pill,.btn,.overlay,.drawer,.toast{display:none!important}
+  .wrap,.hotline-sec,.notes-sec{padding:6px 0 0;overflow:visible}
+  .grid,.hotline{min-width:0;border-radius:0}
+  .grid td.cell{height:auto;padding:3px 4px}
+  .tile{padding:1px 5px;margin-bottom:2px;font-size:10.5px}
+  .hotline input{padding:3px 5px}
+  textarea{display:none!important}
+  .print-notes{display:block;white-space:pre-wrap;padding:6px 0}
+}
+</style>
+</head>
+<body>
+<div id="app"><section class="create"><p>Chargement…</p></section></div>
+<div id="overlay" class="overlay" hidden></div>
+<aside id="drawer" class="drawer" hidden></aside>
+<div id="toast" class="toast" hidden></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* =====================================================================
+   CONFIGURATION — à renseigner (Supabase → Project Settings → API)
+   ===================================================================== */
+const SUPABASE_URL = 'https://wqbgvcxpllomikdxdnia.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_STPdsot46YO065g8Twq5zQ_bNE46kts';
+/* ===================================================================== */
+
+const CONFIGURED = !/VOTRE-PROJET|VOTRE-CLE/.test(SUPABASE_URL + SUPABASE_ANON_KEY) && typeof window.supabase !== 'undefined';
+const initialHash = window.location.hash || '';
+const sb = CONFIGURED ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+/* ---------- Référentiels ---------- */
+const POSTS = [
+  {id:'s1',  label:'Secteur 1',     color:'#2F7D4F', tint:'#E8F3EC', alert:true},
+  {id:'s2',  label:'Secteur 2',     color:'#A8690E', tint:'#FBF1DF', alert:true},
+  {id:'hdj', label:'HDJ',           color:'#2B62A8', tint:'#E5EDF8'},
+  {id:'cs',  label:'Consultations', color:'#6B45B5', tint:'#EEE8F8'},
+  {id:'off', label:'Off',           color:'#5F6B7A', tint:'#EEF0F3'},
+  {id:'abs', label:'Absents',       color:'#B93030', tint:'#FBE7E7'}
+];
+const POST = Object.fromEntries(POSTS.map(p => [p.id, p]));
+const DAYS = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi'];
+const HALVES = [{id:'am', label:'Matin'}, {id:'pm', label:'Après-midi'}];
+const SLOTS = [];
+DAYS.forEach((_, d) => HALVES.forEach(h => SLOTS.push('d' + d + h.id)));
+const slotLabel = s => DAYS[+s[1]].toLowerCase() + ' ' + (s.endsWith('am') ? 'matin' : 'après-midi');
+const HOTLINE_ROWS = [{id:'hot', label:'Hotline'}, {id:'pres', label:'8h30-18h30'}];
+const hotlineLabel = (row, i) => row === 'pres' ? (i % 2 === 0 ? '8h30' : '18h30') + ' ' + DAYS[Math.floor(i / 2)].toLowerCase() : 'Hotline ' + slotLabel(SLOTS[i]);
+const PARITY = {any:'toutes semaines', even:'semaines paires', odd:'semaines impaires'};
+const blank10 = () => Array(10).fill('');
+const norm = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- Dates ---------- */
+const pad = n => String(n).padStart(2, '0');
+const toKey = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const fromKey = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const today = () => { const t = new Date(); t.setHours(0, 0, 0, 0); return t; };
+const mondayOf = d => { const x = new Date(d); x.setHours(0, 0, 0, 0); return addDays(x, -((x.getDay() + 6) % 7)); };
+const fmtLong = new Intl.DateTimeFormat('fr-FR', {day:'numeric', month:'long', year:'numeric'});
+const fmtShort = new Intl.DateTimeFormat('fr-FR', {day:'numeric', month:'short'});
+const fmtTime = new Intl.DateTimeFormat('fr-FR', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+const isPastWeek = key => addDays(fromKey(key), 5) <= today();
+function isoWeek(d){
+  const x = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = x.getUTCDay() || 7;
+  x.setUTCDate(x.getUTCDate() + 4 - day);
+  const y0 = new Date(Date.UTC(x.getUTCFullYear(), 0, 1));
+  return Math.ceil(((x - y0) / 86400000 + 1) / 7);
+}
+const parityOf = key => (isoWeek(fromKey(key)) % 2 === 0 ? 'even' : 'odd');
+const parityWord = key => (parityOf(key) === 'even' ? 'paire' : 'impaire');
+
+/* ---------- État ---------- */
+const S = {
+  session:null, me:null, profiles:[], doctors:[], templates:[],
+  current:toKey(mondayOf(today())), week:null, weekLoading:false,
+  started:false, rt:'', channel:null, loadError:null
+};
+const ui = {
+  drawer:null, confirm:null, editing:null, editTemplate:null, drag:null, toastTimer:null,
+  authBusy:false, authMsg:'', authErr:'', setPassword:/type=(invite|recovery)/.test(initialHash),
+  pending:false, rtTimer:null, rtQueue:new Set()
+};
+
+const q = sel => document.querySelector(sel);
+const isAdmin = () => !!(S.me && S.me.role === 'admin');
+const activeDocs = () => S.doctors.filter(d => d.active);
+const doc = id => S.doctors.find(d => d.id === id);
+const locked = () => !!S.week && isPastWeek(S.current) && !S.week.unlocked;
+const canEdit = () => (ui.editTemplate ? isAdmin() : (!!S.week && !locked()));
+const curTemplate = () => (ui.editTemplate ? S.templates.find(t => t.id === ui.editTemplate) : null);
+const postOf = (asg, slot, id) => (asg[slot] && asg[slot][id]) || 'off';
+function templatesFor(key){
+  const par = parityOf(key);
+  const rank = t => (t.parity === par ? 0 : t.parity === 'any' ? 1 : 2);
+  return S.templates.slice().sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name, 'fr'));
+}
+async function must(p){ const {data, error} = await p; if (error) throw error; return data; }
+function toast(msg, long){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.hidden = false;
+  clearTimeout(ui.toastTimer);
+  ui.toastTimer = setTimeout(() => { el.hidden = true; }, long ? 6000 : 2600);
+}
+function errText(e){ return (e && (e.message || e.error_description || e.msg)) || String(e); }
+
+/* ---------- Chargements ---------- */
+async function loadMe(){
+  const u = S.session.user;
+  let me = await must(sb.from('profiles').select('*').eq('id', u.id).maybeSingle());
+  if (!me){
+    me = await must(sb.from('profiles').insert({id:u.id, email:u.email || null, display_name:(u.email || 'Utilisateur').split('@')[0]}).select().single());
+  }
+  S.me = me;
+}
+async function loadProfiles(){ S.profiles = await must(sb.from('profiles').select('*').order('display_name')); }
+async function loadDoctors(){
+  const rows = await must(sb.from('doctors').select('*').order('sort_order').order('name'));
+  S.doctors = rows.sort((a, b) => (a.sort_order - b.sort_order) || a.name.localeCompare(b.name, 'fr'));
+}
+async function loadTemplates(){
+  const [ts, tas] = await Promise.all([
+    must(sb.from('templates').select('*').order('name')),
+    must(sb.from('template_assignments').select('template_id,slot,doctor_id,post'))
+  ]);
+  const map = {};
+  ts.forEach(t => { t.assignments = {}; SLOTS.forEach(s => { t.assignments[s] = {}; }); map[t.id] = t; });
+  tas.forEach(r => { const t = map[r.template_id]; if (t && t.assignments[r.slot]) t.assignments[r.slot][r.doctor_id] = r.post; });
+  S.templates = ts;
+}
+async function loadWeek(key){
+  S.weekLoading = true;
+  try {
+    const [w, as, hs, hist] = await Promise.all([
+      must(sb.from('weeks').select('*').eq('monday', key).maybeSingle()),
+      must(sb.from('assignments').select('slot,doctor_id,post').eq('week', key)),
+      must(sb.from('hotline').select('row,i,value').eq('week', key)),
+      must(sb.from('history').select('id,user_name,text,created_at').eq('week', key).order('created_at', {ascending:false}).limit(300))
+    ]);
+    if (key !== S.current) return;
+    if (!w){ S.week = null; return; }
+    const assignments = {}; SLOTS.forEach(s => { assignments[s] = {}; });
+    as.forEach(r => { if (assignments[r.slot]) assignments[r.slot][r.doctor_id] = r.post; });
+    const hotline = {hot:blank10(), pres:blank10()};
+    hs.forEach(r => { if (hotline[r.row] && r.i >= 0 && r.i < 10) hotline[r.row][r.i] = r.value || ''; });
+    S.week = {monday:key, notes:w.notes || '', unlocked:!!w.unlocked, assignments, hotline, history:hist || []};
+  } finally { if (key === S.current) S.weekLoading = false; }
+}
+async function loadAll(){
+  S.loadError = null;
+  try {
+    await loadMe();
+    await Promise.all([loadDoctors(), loadTemplates(), loadProfiles()]);
+    await loadWeek(S.current);
+  } catch (e) { S.loadError = errText(e); }
+}
+
+/* ---------- Session ---------- */
+async function start(){
+  if (S.started) return;
+  S.started = true;
+  render();
+  await loadAll();
+  subscribeRealtime();
+  render();
+}
+function stop(){
+  S.started = false; S.me = null; S.week = null; S.doctors = []; S.templates = []; S.profiles = [];
+  if (S.channel){ try { sb.removeChannel(S.channel); } catch (e) { /* ignore */ } S.channel = null; }
+  ui.drawer = null; ui.editTemplate = null; ui.confirm = null;
+}
+async function boot(){
+  if (!CONFIGURED){ render(); return; }
+  const {data} = await sb.auth.getSession();
+  S.session = data ? data.session : null;
+  sb.auth.onAuthStateChange((event, session) => {
+    S.session = session;
+    if (event === 'PASSWORD_RECOVERY') ui.setPassword = true;
+    if (session && !S.started) start();
+    else if (!session && S.started){ stop(); render(); }
+    else render();
+  });
+  if (S.session) await start(); else render();
+}
+
+/* ---------- Temps réel ---------- */
+function subscribeRealtime(){
+  if (S.channel) return;
+  S.channel = sb.channel('planning-medical')
+    .on('postgres_changes', {event:'*', schema:'public'}, onRemoteChange)
+    .subscribe(status => { S.rt = status; const dot = q('.rt'); if (dot){ dot.className = 'rt ' + rtClass(); dot.title = rtTitle(); } });
+}
+const rtClass = () => (S.rt === 'SUBSCRIBED' ? 'on' : S.rt ? 'off' : '');
+const rtTitle = () => (S.rt === 'SUBSCRIBED' ? 'Mise à jour en direct active' : 'Mise à jour en direct indisponible : rechargez la page pour voir les changements des autres');
+function onRemoteChange(p){
+  const t = p.table, row = p.new && Object.keys(p.new).length ? p.new : (p.old || {});
+  if (t === 'doctors') ui.rtQueue.add('doctors');
+  else if (t === 'templates' || t === 'template_assignments') ui.rtQueue.add('templates');
+  else if (t === 'profiles') ui.rtQueue.add('profiles');
+  else {
+    const wk = row.week || row.monday;
+    if (!wk || wk === S.current) ui.rtQueue.add('week');
+  }
+  clearTimeout(ui.rtTimer);
+  ui.rtTimer = setTimeout(applyRemoteChanges, 300);
+}
+async function applyRemoteChanges(){
+  const jobs = [...ui.rtQueue]; ui.rtQueue.clear();
+  try {
+    await Promise.all(jobs.map(j => j === 'doctors' ? loadDoctors() : j === 'templates' ? loadTemplates() : j === 'profiles' ? loadProfiles().then(loadMe) : loadWeek(S.current)));
+  } catch (e) { console.error(e); return; }
+  if (jobs.includes('templates') && ui.editTemplate && !curTemplate()) ui.editTemplate = null;
+  safeRender();
+}
+function isTyping(el){ return !!(el && el.matches && el.matches('.hotline input, .notes-sec textarea, .drawer input, .drawer select')); }
+function safeRender(){
+  if (ui.drag || isTyping(document.activeElement)){ ui.pending = true; return; }
+  ui.pending = false; render();
+}
+document.addEventListener('focusout', e => { if (ui.pending && !isTyping(e.relatedTarget)) setTimeout(() => { if (ui.pending && !isTyping(document.activeElement)) safeRender(); }, 50); });
+
+/* ---------- Écritures ---------- */
+async function run(fn, okMsg){
+  try { await fn(); if (okMsg) toast(okMsg); }
+  catch (e) {
+    console.error(e);
+    toast('Enregistrement refusé : ' + errText(e), true);
+    try { await loadAll(); } catch (x) { /* ignore */ }
+    render();
+  }
+}
+async function log(text){
+  if (!S.week || !S.me) return;
+  const created_at = new Date().toISOString();
+  S.week.history.unshift({id:'tmp' + Date.now(), user_name:S.me.display_name, text, created_at});
+  await must(sb.from('history').insert({week:S.current, user_id:S.session.user.id, user_name:S.me.display_name, text}));
+}
+
+/* ---------- Rendu ---------- */
+function render(){
+  const app = document.getElementById('app');
+  if (!CONFIGURED){ app.innerHTML = setupScreen(); renderDrawer(); return; }
+  if (!S.session){ app.innerHTML = loginScreen(); renderDrawer(); return; }
+  if (ui.setPassword){ app.innerHTML = passwordScreen(); renderDrawer(); return; }
+  if (!S.me){ app.innerHTML = S.loadError ? errorScreen() : `<section class="create"><p>Chargement…</p></section>`; renderDrawer(); return; }
+  const admin = isAdmin();
+  if (ui.editTemplate && (!admin || !curTemplate())) ui.editTemplate = null;
+  const t = curTemplate();
+  let h;
+  if (t){
+    h = templateBar(t) + grid({assignments:t.assignments}, null, true);
+    document.title = 'Modèle « ' + t.name + ' »';
+  } else {
+    const key = S.current, w = S.week;
+    const editable = !!w && !locked();
+    h = topbar(key, w, admin);
+    if (S.loadError) h += errorScreen();
+    else if (S.weekLoading && !w) h += `<section class="create"><p>Chargement de la semaine…</p></section>`;
+    else if (!w) h += createPanel(key);
+    else h += grid(w, key, editable) + hotline(w, editable) + notes(w, editable);
+    document.title = 'Planning médical, semaine du ' + fmtLong.format(fromKey(key));
+  }
+  app.innerHTML = h;
+  renderDrawer();
+}
+
+function setupScreen(){
+  return `<section class="create"><h2>Configuration requise</h2>
+    <p>Renseignez <code>SUPABASE_URL</code> et <code>SUPABASE_ANON_KEY</code> en tête du script de cette page (Supabase → Project Settings → API), puis rechargez.</p></section>`;
+}
+function errorScreen(){
+  return `<section class="create"><h2>Impossible de charger les données</h2><p>${esc(S.loadError)}</p>
+    <div class="create-row"><button class="btn primary" data-action="retry">Réessayer</button><button class="btn" data-action="logout">Se déconnecter</button></div></section>`;
+}
+function loginScreen(){
+  return `<section class="auth">
+    <div class="brand big">Planning médical</div>
+    <h1>Connexion</h1>
+    <label>Adresse e-mail<input type="email" data-field="login-email" autocomplete="username" autocapitalize="off" spellcheck="false"></label>
+    <label>Mot de passe<input type="password" data-field="login-password" autocomplete="current-password"></label>
+    ${ui.authErr ? `<p class="auth-err">${esc(ui.authErr)}</p>` : ''}
+    ${ui.authMsg ? `<p class="auth-msg">${esc(ui.authMsg)}</p>` : ''}
+    <button class="btn primary wide" data-action="login"${ui.authBusy ? ' disabled' : ''}>Se connecter</button>
+    <button class="btn link" data-action="forgot"${ui.authBusy ? ' disabled' : ''}>Mot de passe oublié</button>
+    <p class="muted">Pas encore de compte ? Demandez une invitation à l'administrateur du planning.</p>
+  </section>`;
+}
+function passwordScreen(){
+  return `<section class="auth">
+    <div class="brand big">Planning médical</div>
+    <h1>Choisissez votre mot de passe</h1>
+    <label>Nouveau mot de passe<input type="password" data-field="pw1" autocomplete="new-password"></label>
+    <label>Confirmation<input type="password" data-field="pw2" autocomplete="new-password"></label>
+    ${ui.authErr ? `<p class="auth-err">${esc(ui.authErr)}</p>` : ''}
+    <button class="btn primary wide" data-action="set-password"${ui.authBusy ? ' disabled' : ''}>Enregistrer</button>
+    <p class="muted">8 caractères minimum.</p>
+  </section>`;
+}
+
+function whoBox(){
+  return `<span class="rt ${rtClass()}" title="${esc(rtTitle())}"></span><span class="who">${esc(S.me.display_name)}${isAdmin() ? ' (admin)' : ''}</span>`;
+}
+
+function topbar(key, w, admin){
+  const mon = fromKey(key);
+  const isThisWeek = key === toKey(mondayOf(today()));
+  let status = '';
+  if (w && locked()) status = `<span class="pill pill-lock">Semaine échue, lecture seule</span>${admin ? '<button class="btn link" data-action="unlock">Déverrouiller</button>' : ''}`;
+  else if (w && isPastWeek(key)) status = `<span class="pill pill-warn">Déverrouillée par l'admin</span>${admin ? '<button class="btn link" data-action="lock">Reverrouiller</button>' : ''}`;
+  return `<header class="topbar">
+    <div class="brand">Planning médical</div>
+    <div class="weeknav">
+      <button class="btn icon" data-action="prev" aria-label="Semaine précédente" title="Semaine précédente">&lsaquo;</button>
+      <h1>Semaine du ${fmtLong.format(mon)}</h1>
+      <button class="btn icon" data-action="next" aria-label="Semaine suivante" title="Semaine suivante">&rsaquo;</button>
+      <span class="pill" title="Numéro de semaine ISO">S${isoWeek(mon)}, ${parityWord(key)}</span>
+      ${isThisWeek ? '<span class="pill pill-now">Cette semaine</span>' : '<button class="btn link" data-action="today">Aujourd\u2019hui</button>'}
+      <input type="date" class="datepick" data-field="pick-date" value="${key}" aria-label="Aller à une date" title="Aller à une date">
+      ${status}
+    </div>
+    <div class="controls">
+      ${whoBox()}
+      <button class="btn" data-action="drawer" data-which="history">Historique</button>
+      <button class="btn" data-action="drawer" data-which="templates">Modèles</button>
+      ${admin ? '<button class="btn" data-action="drawer" data-which="doctors">Médecins</button><button class="btn" data-action="drawer" data-which="accounts">Comptes</button>' : ''}
+      <button class="btn" data-action="drawer" data-which="me" title="Mon compte">Mon compte</button>
+      <button class="btn primary" data-action="print"${w ? '' : ' disabled'}>Imprimer</button>
+    </div>
+  </header>`;
+}
+
+function templateBar(t){
+  return `<header class="topbar">
+    <div class="brand">Planning médical</div>
+    <div class="weeknav">
+      <span class="pill pill-tpl">Modèle</span>
+      <h1>${esc(t.name)}</h1>
+      <span class="hint">Déplacez les tuiles : chaque changement est enregistré. Les semaines déjà créées ne sont pas modifiées.</span>
+    </div>
+    <div class="controls">
+      ${whoBox()}
+      <button class="btn" data-action="drawer" data-which="templates">Modèles</button>
+      <button class="btn primary" data-action="tpl-done">Terminer</button>
+    </div>
+  </header>`;
+}
+
+function gridHead(mon){
+  let h = `<thead><tr><th class="corner" rowspan="2"></th>`;
+  DAYS.forEach((d, i) => { h += `<th class="day" colspan="2">${d}${mon ? `<span class="date">${fmtShort.format(addDays(mon, i))}</span>` : ''}</th>`; });
+  h += `</tr><tr>`;
+  DAYS.forEach(() => HALVES.forEach(hf => { h += `<th class="half">${hf.label}</th>`; }));
+  return h + `</tr></thead>`;
+}
+
+function docsForWeek(w){
+  if (!w || !locked()) return activeDocs();
+  // semaine échue : on montre aussi les médecins devenus inactifs qui y figuraient
+  return S.doctors.filter(d => d.active || SLOTS.some(s => d.id in w.assignments[s]));
+}
+
+function grid(w, key, editable){
+  const mon = key ? fromKey(key) : null;
+  const docs = key ? docsForWeek(w) : activeDocs();
+  let h = `<div class="wrap"><table class="grid">` + gridHead(mon) + `<tbody>`;
+  POSTS.forEach(p => {
+    h += `<tr class="post-row" style="--pc:${p.color};--pt:${p.tint}"><th class="post" scope="row">${p.label}</th>`;
+    SLOTS.forEach(s => {
+      const here = docs.filter(d => postOf(w.assignments, s, d.id) === p.id);
+      const alert = !!p.alert && here.length === 0;
+      h += `<td class="cell${alert ? ' alert' : ''}" data-slot="${s}" data-post="${p.id}">`;
+      here.forEach(d => { h += `<div class="tile" draggable="${editable}" data-doc="${d.id}" style="--dc:${d.color}" title="${esc(d.name)}">${esc(d.name)}</div>`; });
+      if (alert) h += `<span class="alert-msg">Secteur vide</span>`;
+      h += `</td>`;
+    });
+    h += `</tr>`;
+  });
+  return h + `</tbody></table></div>`;
+}
+
+function hotline(w, editable){
+  let h = `<section class="hotline-sec"><h2>Hotline / présence 8h30-18h30</h2><div class="hotline-wrap"><table class="grid hotline">` + gridHead(null) + `<tbody>`;
+  HOTLINE_ROWS.forEach(r => {
+    h += `<tr class="post-row" style="--pc:#1F5FA8"><th class="post" scope="row">${r.label}</th>`;
+    SLOTS.forEach((s, i) => { h += `<td><input type="text" data-field="hotline" data-row="${r.id}" data-i="${i}" value="${esc(w.hotline[r.id][i])}"${editable ? '' : ' disabled'} placeholder="${r.id === 'pres' ? (i % 2 === 0 ? '8h30' : '18h30') : ''}" autocomplete="off" spellcheck="false" aria-label="${hotlineLabel(r.id, i)}"></td>`; });
+    h += `</tr>`;
+  });
+  return h + `</tbody></table></div></section>`;
+}
+
+function notes(w, editable){
+  return `<section class="notes-sec"><h2>Notes de la semaine</h2>
+    <textarea data-field="notes" rows="4"${editable ? '' : ' disabled'} placeholder="${editable ? 'Consignes, rappels, informations pour l\u2019équipe' : ''}" aria-label="Notes de la semaine">${esc(w.notes)}</textarea>
+    <div class="print-notes">${esc(w.notes) || '—'}</div></section>`;
+}
+
+function createPanel(key){
+  const mon = fromKey(key);
+  if (isPastWeek(key) && !isAdmin()) return `<section class="create"><p>Aucun planning n'a été enregistré pour la semaine du ${fmtLong.format(mon)}.</p></section>`;
+  return `<section class="create">
+    <p>Le planning de la semaine du ${fmtLong.format(mon)} (semaine ${isoWeek(mon)}, ${parityWord(key)}) n'existe pas encore.</p>
+    <div class="create-row">
+      <label>Créer à partir de <select data-field="create-from">${templatesFor(key).map(t => `<option value="${t.id}">Modèle « ${esc(t.name)} »${t.parity !== 'any' ? ' (' + PARITY[t.parity] + ')' : ''}</option>`).join('')}<option value="">Semaine vierge (tout le monde en Off)</option></select></label>
+      <button class="btn primary" data-action="create-week">Créer la semaine</button>
+    </div></section>`;
+}
+
+/* ---------- Panneaux ---------- */
+function renderDrawer(){
+  const el = document.getElementById('drawer'), ov = document.getElementById('overlay');
+  if (!ui.drawer || !S.me){ el.hidden = true; ov.hidden = true; el.innerHTML = ''; return; }
+  const title = {history:'Historique de la semaine', templates:'Modèles de semaine', doctors:'Médecins', accounts:'Comptes utilisateurs', me:'Mon compte'}[ui.drawer];
+  const body = {history:drawerHistory, templates:drawerTemplates, doctors:drawerDoctors, accounts:drawerAccounts, me:drawerMe}[ui.drawer]();
+  el.innerHTML = `<div class="drawer-head"><h2>${title}</h2><button class="btn icon" data-action="close" aria-label="Fermer">&times;</button></div><div class="drawer-body">${body}</div>`;
+  el.hidden = false; ov.hidden = false;
+}
+
+function drawerHistory(){
+  const w = S.week;
+  if (!w) return `<p class="muted">Cette semaine n'a pas encore de planning.</p>`;
+  if (!w.history.length) return `<p class="muted">Aucune modification pour l'instant.</p>`;
+  return `<ol class="history">${w.history.map(e => `<li><time>${fmtTime.format(new Date(e.created_at))}</time><b>${esc(e.user_name)}</b><span>${esc(e.text)}</span></li>`).join('')}</ol>`;
+}
+
+function hdjNames(t){
+  const ids = new Set();
+  SLOTS.forEach(s => Object.entries(t.assignments[s] || {}).forEach(([id, p]) => { if (p === 'hdj') ids.add(id); }));
+  const names = [...ids].map(id => { const d = doc(id); return d ? d.name : null; }).filter(Boolean);
+  return 'HDJ : ' + (names.length ? names.join(', ') : 'personne');
+}
+const paritySelect = (field, id, value) => `<select data-field="${field}"${id ? ` data-id="${id}"` : ''} aria-label="Semaines concernées">${Object.entries(PARITY).map(([k, v]) => `<option value="${k}"${k === value ? ' selected' : ''}>${v}</option>`).join('')}</select>`;
+
+function drawerTemplates(){
+  const admin = isAdmin(), w = S.week, tplMode = !!ui.editTemplate;
+  const applicable = !tplMode && !!w && canEdit();
+  let h = '';
+  if (admin){
+    const src = [];
+    if (w && !tplMode) src.push(`<option value="week">la semaine affichée (${fmtLong.format(fromKey(S.current))})</option>`);
+    S.templates.forEach(t => src.push(`<option value="${t.id}">le modèle « ${esc(t.name)} »</option>`));
+    src.push(`<option value="">une semaine vierge (tout le monde en Off)</option>`);
+    h += `<div class="newtpl"><h3>Nouveau modèle</h3>
+      <div class="row"><input type="text" data-field="new-template" placeholder="Nom du modèle, ex. Anne à l'HDJ" aria-label="Nom du modèle"></div>
+      <div class="row"><label>À partir de <select data-field="new-template-from" aria-label="Point de départ">${src.join('')}</select></label></div>
+      <div class="row"><label>Pour ${paritySelect('new-template-parity', null, 'any')}</label></div>
+      <div class="row"><button class="btn primary" data-action="create-template">Créer et modifier</button></div>
+      <p class="muted">Le modèle s'ouvre ensuite dans la grille : déplacez les tuiles, puis cliquez sur Terminer. Seuls les postes sont enregistrés (ni hotline, ni notes).</p></div>`;
+  }
+  h += `<h3 class="listhead">${S.templates.length ? 'Modèles existants' : 'Aucun modèle pour l\u2019instant'}</h3><ul class="list">`;
+  S.templates.forEach(t => {
+    const isCur = ui.editTemplate === t.id;
+    h += `<li class="item">`;
+    if (ui.editing === t.id) h += `<div class="row"><input type="text" data-field="rename" data-id="${t.id}" value="${esc(t.name)}" aria-label="Nouveau nom"><button class="btn primary" data-action="save-rename" data-id="${t.id}">Enregistrer</button><button class="btn" data-action="cancel">Annuler</button></div>`;
+    else h += `<div class="row"><span class="name">${esc(t.name)}</span><span class="meta">${esc(hdjNames(t))}</span>${admin ? paritySelect('tpl-parity', t.id, t.parity) : `<span class="meta">${PARITY[t.parity]}</span>`}${isCur ? '<span class="pill pill-tpl">en cours de modification</span>' : ''}</div>`;
+    const c = ui.confirm && ui.confirm.id === t.id ? ui.confirm.type : null;
+    if (c === 'apply') h += `<div class="confirm">Remplacer tous les placements de la semaine du ${fmtLong.format(fromKey(S.current))} par ce modèle ?<button class="btn danger" data-action="confirm-apply" data-id="${t.id}">Remplacer</button><button class="btn" data-action="cancel">Annuler</button></div>`;
+    else if (c === 'delete') h += `<div class="confirm">Supprimer ce modèle ? Les semaines déjà créées ne changent pas.<button class="btn danger" data-action="confirm-delete" data-id="${t.id}">Supprimer</button><button class="btn" data-action="cancel">Annuler</button></div>`;
+    else if (ui.editing !== t.id) h += `<div class="row">${w ? `<button class="btn" data-action="apply" data-id="${t.id}"${applicable ? '' : ' disabled'}>Appliquer à cette semaine</button>` : ''}${admin && !isCur ? `<button class="btn" data-action="edit-template" data-id="${t.id}">Modifier</button>` : ''}${admin ? `<button class="btn link" data-action="rename" data-id="${t.id}">Renommer</button><button class="btn link" data-action="delete" data-id="${t.id}">Supprimer</button>` : ''}</div>`;
+    h += `</li>`;
+  });
+  h += `</ul>`;
+  if (tplMode) h += `<p class="muted">Terminez la modification du modèle en cours pour en appliquer un à une semaine.</p>`;
+  else if (w && !canEdit()) h += `<p class="muted">Semaine échue : les modèles ne peuvent pas y être appliqués.</p>`;
+  return h;
+}
+
+function drawerDoctors(){
+  let h = `<ul class="list">`;
+  S.doctors.forEach((d, i) => {
+    h += `<li class="item doctor" style="--dc:${d.color}">
+      <div class="row">
+        <input type="color" data-field="doc-color" data-id="${d.id}" value="${d.color}" title="Couleur de la tuile" aria-label="Couleur">
+        <input type="text" class="name" data-field="doc-name" data-id="${d.id}" value="${esc(d.name)}" aria-label="Nom">
+        <label class="check"><input type="checkbox" data-field="doc-active" data-id="${d.id}"${d.active ? ' checked' : ''}> Actif</label>
+        <button class="btn icon" data-action="doc-up" data-id="${d.id}"${i === 0 ? ' disabled' : ''} aria-label="Monter" title="Monter">&uarr;</button>
+        <button class="btn icon" data-action="doc-down" data-id="${d.id}"${i === S.doctors.length - 1 ? ' disabled' : ''} aria-label="Descendre" title="Descendre">&darr;</button>
+      </div></li>`;
+  });
+  h += `</ul>
+    <div class="row"><input type="text" data-field="new-doctor" placeholder="Nom du nouveau médecin" aria-label="Nom du nouveau médecin"><button class="btn primary" data-action="add-doctor">Ajouter</button></div>
+    <p class="muted">Un nouveau médecin apparaît en Off dans les semaines ouvertes et dans les modèles. Un médecin inactif disparaît des semaines ouvertes mais reste visible dans les semaines échues. Les jours non travaillés se gèrent dans les modèles (semaines paires / impaires).</p>
+    <div class="section"><h3>Reprise du prototype</h3>
+      <div class="row"><label class="btn">Importer le fichier JSON du prototype<input type="file" accept="application/json" data-field="import" hidden></label></div>
+      <p class="muted">Importe les médecins manquants (par nom), tous les modèles et les semaines absentes de la base. Les semaines déjà présentes ne sont pas touchées.</p>
+      ${ui.importReport ? `<p class="auth-msg">${esc(ui.importReport)}</p>` : ''}
+    </div>
+    <div class="section"><h3>Sauvegarde</h3>
+      <div class="row"><button class="btn" data-action="export-all">Télécharger toute la base (JSON)</button></div>
+      <p class="muted">Médecins, modèles, semaines, hotline et historique. À faire de temps en temps, par précaution.</p>
+    </div>`;
+  return h;
+}
+
+async function exportAll(){
+  await run(async () => {
+    const names = ['doctors', 'templates', 'template_assignments', 'weeks', 'assignments', 'hotline', 'history'];
+    const data = {exported_at:new Date().toISOString()};
+    const all = await Promise.all(names.map(n => must(sb.from(n).select('*'))));
+    names.forEach((n, i) => { data[n] = all[i]; });
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'planning-medical-sauvegarde-' + toKey(today()) + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }, 'Sauvegarde téléchargée');
+}
+
+function drawerAccounts(){
+  let h = `<p class="muted">Pour ajouter un compte : Supabase → Authentication → Users → « Invite user », avec l'adresse e-mail de la personne. Elle reçoit un lien, choisit son mot de passe et apparaît ici comme éditeur.</p><ul class="list">`;
+  S.profiles.forEach(p => {
+    const me = p.id === S.me.id;
+    h += `<li class="item"><div class="row">
+      <input type="text" data-field="prof-name" data-id="${p.id}" value="${esc(p.display_name)}" aria-label="Nom affiché">
+      <select data-field="prof-role" data-id="${p.id}"${me ? ' disabled title="Vous ne pouvez pas changer votre propre rôle"' : ''} aria-label="Rôle"><option value="editor"${p.role === 'editor' ? ' selected' : ''}>Éditeur</option><option value="admin"${p.role === 'admin' ? ' selected' : ''}>Admin</option></select>
+    </div><div class="meta">${esc(p.email || '')}${me ? ' (vous)' : ''}</div></li>`;
+  });
+  return h + `</ul>`;
+}
+
+function drawerMe(){
+  return `<div class="row"><label style="flex:1">Nom affiché dans l'historique<input type="text" data-field="me-name" value="${esc(S.me.display_name)}" style="width:100%;margin-top:4px"></label></div>
+    <p class="muted">${esc(S.me.email || '')}, ${isAdmin() ? 'administrateur' : 'éditeur'}.</p>
+    <div class="section"><h3>Changer de mot de passe</h3>
+      <div class="row"><input type="password" data-field="me-pw" placeholder="Nouveau mot de passe (8 caractères min.)" autocomplete="new-password" aria-label="Nouveau mot de passe"><button class="btn" data-action="me-set-pw">Enregistrer</button></div>
+    </div>
+    <div class="section"><button class="btn" data-action="logout">Se déconnecter</button></div>`;
+}
+
+/* ---------- Actions ---------- */
+async function go(date){
+  S.current = toKey(mondayOf(date)); ui.confirm = null; ui.editing = null; S.week = null;
+  render();
+  try { await loadWeek(S.current); } catch (e) { toast('Chargement impossible : ' + errText(e), true); }
+  render();
+}
+function closeDrawer(){ ui.drawer = null; ui.confirm = null; ui.editing = null; renderDrawer(); }
+
+function rowsFrom(src, forWeek){
+  const rows = [];
+  SLOTS.forEach(s => activeDocs().forEach(d => {
+    const post = src ? postOf(src.assignments, s, d.id) : 'off';
+    if (forWeek || post !== 'off') rows.push({slot:s, doctor_id:d.id, post});
+  }));
+  return rows;
+}
+
+async function createWeek(from){
+  const key = S.current, t = S.templates.find(x => x.id === from) || null;
+  await run(async () => {
+    await must(sb.from('weeks').insert({monday:key, created_by:S.session.user.id}));
+    const rows = rowsFrom(t, false).map(r => Object.assign({week:key}, r));
+    if (rows.length) await must(sb.from('assignments').insert(rows));
+    await loadWeek(key);
+    await log(t ? `Semaine créée à partir du modèle « ${t.name} »` : 'Semaine créée vierge');
+    render();
+  }, 'Semaine créée');
+}
+
+async function applyTemplate(id){
+  const t = S.templates.find(x => x.id === id), w = S.week;
+  if (!t || !w || ui.editTemplate || !canEdit()) return;
+  const rows = rowsFrom(t, true).map(r => Object.assign({week:S.current}, r));
+  rows.forEach(r => { w.assignments[r.slot][r.doctor_id] = r.post; });
+  ui.confirm = null; render();
+  await run(async () => {
+    await must(sb.from('assignments').upsert(rows));
+    await log(`Modèle « ${t.name} » appliqué`);
+  }, 'Modèle appliqué');
+}
+
+async function moveTile(docId, slot, to){
+  if (!canEdit()) return;
+  const t = curTemplate();
+  if (t){
+    if (postOf(t.assignments, slot, docId) === to) return;
+    t.assignments[slot][docId] = to; render();
+    await run(() => must(sb.from('template_assignments').upsert({template_id:t.id, slot, doctor_id:docId, post:to})));
+    return;
+  }
+  const w = S.week, from = postOf(w.assignments, slot, docId);
+  if (from === to) return;
+  w.assignments[slot][docId] = to; render();
+  const d = doc(docId);
+  await run(async () => {
+    await must(sb.from('assignments').upsert({week:S.current, slot, doctor_id:docId, post:to}));
+    await log(`${d ? d.name : '?'} : ${POST[from].label} → ${POST[to].label}, ${slotLabel(slot)}`);
+  });
+}
+
+async function createTemplate(name, from, parity){
+  const src = from === 'week' ? S.week : S.templates.find(x => x.id === from);
+  await run(async () => {
+    const t = await must(sb.from('templates').insert({name, parity:PARITY[parity] ? parity : 'any'}).select().single());
+    const rows = rowsFrom(src || null, false).map(r => Object.assign({template_id:t.id}, r));
+    if (rows.length) await must(sb.from('template_assignments').insert(rows));
+    await loadTemplates();
+    ui.editTemplate = t.id; ui.drawer = null; ui.confirm = null; ui.editing = null;
+    render();
+  }, `Modèle « ${name} » créé : déplacez les tuiles, puis Terminer`);
+}
+
+async function addDoctor(name){
+  await run(async () => {
+    const order = S.doctors.reduce((m, d) => Math.max(m, d.sort_order || 0), 0) + 1;
+    await must(sb.from('doctors').insert({name, color:'#5F6B7A', sort_order:order}));
+    await loadDoctors(); render();
+  }, `${name} : ajouté(e), en Off partout`);
+}
+
+async function importPrototype(file){
+  if (!file) return;
+  let data;
+  try { data = JSON.parse(await file.text()); if (!Array.isArray(data.doctors) || typeof data.weeks !== 'object') throw new Error('format'); }
+  catch (e) { toast('Fichier non reconnu : export JSON du prototype attendu', true); return; }
+  await run(async () => {
+    const report = [];
+    // médecins : par nom
+    const byName = {}; S.doctors.forEach(d => { byName[norm(d.name)] = d.id; });
+    let order = S.doctors.reduce((m, d) => Math.max(m, d.sort_order || 0), 0);
+    const map = {}; let added = 0;
+    for (const pd of data.doctors){
+      const k = norm(pd.name);
+      if (!byName[k]){
+        const nd = await must(sb.from('doctors').insert({name:pd.name, color:pd.color || '#5F6B7A', active:pd.active !== false, sort_order:++order}).select().single());
+        byName[k] = nd.id; added++;
+      }
+      map[pd.id] = byName[k];
+    }
+    report.push(`${added} médecin(s) ajouté(s)`);
+    const conv = a => { const rows = []; SLOTS.forEach(s => Object.entries((a && a[s]) || {}).forEach(([pid, post]) => { if (map[pid] && post !== 'off') rows.push({slot:s, doctor_id:map[pid], post}); })); return rows; };
+    // modèles
+    let tpls = 0;
+    for (const pt of (data.templates || [])){
+      const t = await must(sb.from('templates').insert({name:pt.name, parity:PARITY[pt.parity] ? pt.parity : 'any'}).select().single());
+      const rows = conv(pt.assignments).map(r => Object.assign({template_id:t.id}, r));
+      if (rows.length) await must(sb.from('template_assignments').insert(rows));
+      tpls++;
+    }
+    report.push(`${tpls} modèle(s)`);
+    // semaines absentes
+    const existing = new Set((await must(sb.from('weeks').select('monday'))).map(w => w.monday));
+    let wks = 0, skipped = 0;
+    for (const [key, pw] of Object.entries(data.weeks)){
+      if (existing.has(key) || !/^\d{4}-\d{2}-\d{2}$/.test(key)){ skipped++; continue; }
+      await must(sb.from('weeks').insert({monday:key, notes:pw.notes || '', unlocked:!!pw.unlocked, created_by:S.session.user.id}));
+      const rows = conv(pw.assignments).map(r => Object.assign({week:key}, r));
+      if (rows.length) await must(sb.from('assignments').insert(rows));
+      const hl = [];
+      ['hot', 'pres'].forEach(row => ((pw.hotline || {})[row] || []).forEach((v, i) => { if (v && i < 10) hl.push({week:key, row, i, value:v}); }));
+      if (hl.length) await must(sb.from('hotline').insert(hl));
+      wks++;
+    }
+    report.push(`${wks} semaine(s) importée(s)${skipped ? `, ${skipped} déjà présente(s) ignorée(s)` : ''}`);
+    ui.importReport = 'Import terminé : ' + report.join(', ') + '.';
+    await Promise.all([loadDoctors(), loadTemplates(), loadWeek(S.current)]);
+    render();
+  }, 'Import terminé');
+}
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-action]');
+  if (!b || b.disabled) return;
+  const a = b.dataset.action, id = b.dataset.id, w = S.week;
+  switch (a){
+    case 'login': doLogin(); break;
+    case 'forgot': doForgot(); break;
+    case 'set-password': doSetPassword(); break;
+    case 'logout': sb.auth.signOut(); break;
+    case 'retry': S.loadError = null; render(); loadAll().then(render); break;
+    case 'prev': go(addDays(fromKey(S.current), -7)); break;
+    case 'next': go(addDays(fromKey(S.current), 7)); break;
+    case 'today': go(today()); break;
+    case 'print': window.print(); break;
+    case 'drawer': ui.drawer = b.dataset.which; ui.confirm = null; ui.editing = null; ui.importReport = ''; renderDrawer(); break;
+    case 'close': closeDrawer(); break;
+    case 'cancel': ui.confirm = null; ui.editing = null; renderDrawer(); break;
+    case 'create-week': createWeek(q('[data-field="create-from"]').value); break;
+    case 'unlock': case 'lock':
+      if (w && isAdmin()){ const v = a === 'unlock'; w.unlocked = v; render(); run(async () => { await must(sb.from('weeks').update({unlocked:v}).eq('monday', S.current)); await log(v ? 'Semaine déverrouillée' : 'Semaine reverrouillée'); }, v ? 'Semaine déverrouillée' : 'Semaine reverrouillée'); }
+      break;
+    case 'apply': ui.confirm = {type:'apply', id}; ui.editing = null; renderDrawer(); break;
+    case 'confirm-apply': applyTemplate(id); break;
+    case 'rename': ui.editing = id; ui.confirm = null; renderDrawer(); { const i = q('[data-field="rename"]'); if (i){ i.focus(); i.select(); } } break;
+    case 'save-rename': {
+      const i = q('[data-field="rename"]'); const t = S.templates.find(x => x.id === id); const v = i && i.value.trim();
+      ui.editing = null;
+      if (t && v && v !== t.name){ t.name = v; render(); run(() => must(sb.from('templates').update({name:v}).eq('id', id))); } else renderDrawer();
+    } break;
+    case 'delete': ui.confirm = {type:'delete', id}; ui.editing = null; renderDrawer(); break;
+    case 'confirm-delete':
+      S.templates = S.templates.filter(x => x.id !== id); ui.confirm = null; if (ui.editTemplate === id) ui.editTemplate = null; render();
+      run(() => must(sb.from('templates').delete().eq('id', id)), 'Modèle supprimé');
+      break;
+    case 'create-template': {
+      const i = q('[data-field="new-template"]'); const v = i && i.value.trim();
+      if (!v){ if (i) i.focus(); toast('Donnez un nom au modèle'); break; }
+      const f = q('[data-field="new-template-from"]'), pr = q('[data-field="new-template-parity"]');
+      createTemplate(v, f ? f.value : '', pr ? pr.value : 'any');
+    } break;
+    case 'edit-template': ui.editTemplate = id; ui.drawer = null; ui.confirm = null; ui.editing = null; render(); break;
+    case 'tpl-done': ui.editTemplate = null; ui.confirm = null; render(); toast('Modèle enregistré'); break;
+    case 'export-all': exportAll(); break;
+    case 'add-doctor': { const i = q('[data-field="new-doctor"]'); const v = i && i.value.trim(); if (!v){ if (i) i.focus(); break; } addDoctor(v); } break;
+    case 'doc-up': case 'doc-down': {
+      const i = S.doctors.findIndex(d => d.id === id); const j = a === 'doc-up' ? i - 1 : i + 1;
+      if (i < 0 || j < 0 || j >= S.doctors.length) break;
+      const A = S.doctors[i], B = S.doctors[j];
+      S.doctors.forEach((d, k) => { d.sort_order = k + 1; });
+      const oa = A.sort_order, ob = B.sort_order; A.sort_order = ob; B.sort_order = oa;
+      S.doctors.sort((x, y) => x.sort_order - y.sort_order); render();
+      run(() => Promise.all([must(sb.from('doctors').update({sort_order:A.sort_order}).eq('id', A.id)), must(sb.from('doctors').update({sort_order:B.sort_order}).eq('id', B.id))]));
+    } break;
+    case 'me-set-pw': {
+      const i = q('[data-field="me-pw"]'); const v = i && i.value;
+      if (!v || v.length < 8){ toast('8 caractères minimum'); break; }
+      run(async () => { await must(sb.auth.updateUser({password:v})); i.value = ''; }, 'Mot de passe modifié');
+    } break;
+  }
+});
+
+document.addEventListener('change', e => {
+  const el = e.target, f = el.dataset.field;
+  if (!f) return;
+  const w = S.week;
+  switch (f){
+    case 'pick-date': if (el.value) go(fromKey(el.value)); break;
+    case 'hotline': {
+      if (!w || ui.editTemplate || !canEdit()) return;
+      const row = el.dataset.row, i = +el.dataset.i, v = el.value.trim();
+      if (w.hotline[row][i] === v) return;
+      w.hotline[row][i] = v;
+      run(async () => {
+        await must(sb.from('hotline').upsert({week:S.current, row, i, value:v}));
+        await log(`${hotlineLabel(row, i)} : ${v ? '« ' + v + ' »' : 'effacé'}`);
+        if (ui.drawer === 'history') renderDrawer();
+      });
+      break;
+    }
+    case 'notes': {
+      if (!w || ui.editTemplate || !canEdit()) return;
+      if (w.notes === el.value) return;
+      w.notes = el.value;
+      const pn = q('.print-notes'); if (pn) pn.textContent = w.notes || '—';
+      run(async () => {
+        await must(sb.from('weeks').update({notes:w.notes}).eq('monday', S.current));
+        await log('Notes de la semaine modifiées');
+        if (ui.drawer === 'history') renderDrawer();
+      });
+      break;
+    }
+    case 'tpl-parity': { const t = S.templates.find(x => x.id === el.dataset.id); if (t && PARITY[el.value]){ t.parity = el.value; run(() => must(sb.from('templates').update({parity:el.value}).eq('id', t.id))); } break; }
+    case 'doc-name': { const d = doc(el.dataset.id); const v = el.value.trim(); if (d && v && v !== d.name){ d.name = v; render(); run(() => must(sb.from('doctors').update({name:v}).eq('id', d.id))); } else if (d) el.value = d.name; break; }
+    case 'doc-color': { const d = doc(el.dataset.id); if (d){ d.color = el.value; render(); run(() => must(sb.from('doctors').update({color:el.value}).eq('id', d.id))); } break; }
+    case 'doc-active': { const d = doc(el.dataset.id); if (d){ d.active = el.checked; render(); run(() => must(sb.from('doctors').update({active:el.checked}).eq('id', d.id))); } break; }
+    case 'prof-name': { const p = S.profiles.find(x => x.id === el.dataset.id); const v = el.value.trim(); if (p && v && v !== p.display_name){ p.display_name = v; if (p.id === S.me.id) S.me.display_name = v; render(); run(() => must(sb.from('profiles').update({display_name:v}).eq('id', p.id))); } else if (p) el.value = p.display_name; break; }
+    case 'prof-role': { const p = S.profiles.find(x => x.id === el.dataset.id); if (p && p.id !== S.me.id){ p.role = el.value; run(() => must(sb.from('profiles').update({role:el.value}).eq('id', p.id)), 'Rôle modifié'); } break; }
+    case 'me-name': { const v = el.value.trim(); if (v && v !== S.me.display_name){ S.me.display_name = v; render(); run(() => must(sb.from('profiles').update({display_name:v}).eq('id', S.me.id)), 'Nom enregistré'); } else el.value = S.me.display_name; break; }
+    case 'import': importPrototype(el.files[0]); el.value = ''; break;
+  }
+});
+
+/* ---------- Authentification ---------- */
+async function doLogin(){
+  const email = (q('[data-field="login-email"]') || {}).value || '', password = (q('[data-field="login-password"]') || {}).value || '';
+  if (!email || !password){ ui.authErr = 'Indiquez votre adresse e-mail et votre mot de passe.'; render(); return; }
+  ui.authBusy = true; ui.authErr = ''; ui.authMsg = ''; render();
+  const {error} = await sb.auth.signInWithPassword({email:email.trim(), password});
+  ui.authBusy = false;
+  if (error){ ui.authErr = /invalid/i.test(error.message) ? 'Adresse ou mot de passe incorrect.' : errText(error); render(); }
+}
+async function doForgot(){
+  const email = ((q('[data-field="login-email"]') || {}).value || '').trim();
+  if (!email){ ui.authErr = 'Indiquez d\u2019abord votre adresse e-mail.'; render(); return; }
+  ui.authBusy = true; ui.authErr = ''; render();
+  const {error} = await sb.auth.resetPasswordForEmail(email, {redirectTo:window.location.origin + window.location.pathname});
+  ui.authBusy = false;
+  if (error) ui.authErr = errText(error); else ui.authMsg = 'Si cette adresse est connue, un e-mail de réinitialisation vient d\u2019être envoyé.';
+  render();
+}
+async function doSetPassword(){
+  const a = (q('[data-field="pw1"]') || {}).value || '', b = (q('[data-field="pw2"]') || {}).value || '';
+  if (a.length < 8){ ui.authErr = '8 caractères minimum.'; render(); return; }
+  if (a !== b){ ui.authErr = 'Les deux saisies ne correspondent pas.'; render(); return; }
+  ui.authBusy = true; ui.authErr = ''; render();
+  const {error} = await sb.auth.updateUser({password:a});
+  ui.authBusy = false;
+  if (error){ ui.authErr = errText(error); render(); return; }
+  ui.setPassword = false; toast('Mot de passe enregistré');
+  if (!S.started) start(); else render();
+}
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const el = e.target;
+  if (el.matches && el.matches('[data-field="login-email"], [data-field="login-password"]')) doLogin();
+  else if (el.matches && el.matches('[data-field="pw1"], [data-field="pw2"]')) doSetPassword();
+});
+
+document.getElementById('overlay').addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.drawer) closeDrawer(); });
+
+/* ---------- Glisser-déposer ---------- */
+const app = document.getElementById('app');
+app.addEventListener('dragstart', e => {
+  const t = e.target.closest && e.target.closest('.tile');
+  if (!t || !canEdit()){ e.preventDefault(); return; }
+  const cell = t.closest('.cell');
+  ui.drag = {doc:t.dataset.doc, slot:cell.dataset.slot, from:cell.dataset.post};
+  e.dataTransfer.effectAllowed = 'move';
+  try { e.dataTransfer.setData('text/plain', t.dataset.doc); } catch (x) { /* ignore */ }
+  t.classList.add('dragging');
+  document.querySelectorAll(`.cell[data-slot="${ui.drag.slot}"]`).forEach(c => { if (c.dataset.post !== ui.drag.from) c.classList.add('target'); });
+});
+app.addEventListener('dragover', e => {
+  if (!ui.drag) return;
+  const c = e.target.closest && e.target.closest('.cell');
+  if (!c || c.dataset.slot !== ui.drag.slot || c.dataset.post === ui.drag.from) return;
+  e.preventDefault(); e.dataTransfer.dropEffect = 'move'; c.classList.add('over');
+});
+app.addEventListener('dragleave', e => {
+  const c = e.target.closest && e.target.closest('.cell');
+  if (c && !(e.relatedTarget && c.contains(e.relatedTarget))) c.classList.remove('over');
+});
+app.addEventListener('drop', e => {
+  if (!ui.drag) return;
+  const c = e.target.closest && e.target.closest('.cell');
+  if (!c || c.dataset.slot !== ui.drag.slot) return;
+  e.preventDefault();
+  const d = ui.drag; ui.drag = null;
+  moveTile(d.doc, d.slot, c.dataset.post);
+});
+app.addEventListener('dragend', () => {
+  ui.drag = null;
+  document.querySelectorAll('.tile.dragging,.cell.target,.cell.over').forEach(el => el.classList.remove('dragging', 'target', 'over'));
+  if (ui.pending) safeRender();
+});
+
+/* ---------- Complétion et navigation dans la hotline ---------- */
+function completeName(el){
+  const v = el.value;
+  if (el.selectionStart !== v.length || el.selectionEnd !== v.length) return;
+  const m = v.match(/^(.*[,\/+&]\s*)?([^,\/+&]*)$/);
+  const prefix = m[1] || '', token = m[2];
+  const typed = token.replace(/^\s+/, '');
+  if (!typed) return;
+  const lead = token.slice(0, token.length - typed.length);
+  const nt = norm(typed);
+  const cand = activeDocs().find(d => { const nd = norm(d.name); return nd.startsWith(nt) && nd !== nt; });
+  if (!cand) return;
+  el.value = prefix + lead + cand.name;
+  el.setSelectionRange(v.length, el.value.length);
+}
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (!el.dataset || el.dataset.field !== 'hotline') return;
+  if (e.inputType && e.inputType.startsWith('delete')) return;
+  completeName(el);
+});
+function hotlineInput(r, i){
+  if (r < 0 || r >= HOTLINE_ROWS.length || i < 0 || i >= SLOTS.length) return null;
+  const el = document.querySelector(`.hotline input[data-row="${HOTLINE_ROWS[r].id}"][data-i="${i}"]`);
+  return el && !el.disabled ? el : null;
+}
+document.addEventListener('keydown', e => {
+  const el = e.target;
+  if (!el.dataset || el.dataset.field !== 'hotline') return;
+  const hasSel = el.selectionEnd > el.selectionStart && el.selectionEnd === el.value.length;
+  if (e.key === 'Escape' && hasSel){ e.preventDefault(); el.value = el.value.slice(0, el.selectionStart); return; }
+  if (e.key === 'Enter'){
+    e.preventDefault();
+    el.setSelectionRange(el.value.length, el.value.length);
+    const inputs = [...document.querySelectorAll('.hotline input:not(:disabled)')];
+    const next = inputs[inputs.indexOf(el) + 1];
+    if (next) next.focus(); else el.blur();
+    return;
+  }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown'){
+    const sel = el.selectionEnd > el.selectionStart;
+    const i = +el.dataset.i, r = HOTLINE_ROWS.findIndex(x => x.id === el.dataset.row);
+    let target = null, caret = 'end';
+    if (e.key === 'ArrowRight'){ if (sel || el.selectionEnd < el.value.length) return; target = hotlineInput(r, i + 1); caret = 'start'; }
+    else if (e.key === 'ArrowLeft'){ if (sel || el.selectionStart > 0) return; target = hotlineInput(r, i - 1); }
+    else target = hotlineInput(r + (e.key === 'ArrowDown' ? 1 : -1), i);
+    if (!target) return;
+    e.preventDefault();
+    target.focus();
+    const n = caret === 'start' ? 0 : target.value.length;
+    target.setSelectionRange(n, n);
+  }
+});
+
+/* ---------- Démarrage ---------- */
+boot();
+})();
+
+</script>
+</body>
+</html>
